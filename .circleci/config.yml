@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/build-image:ubuntu-14.04-XXL-upstart-1189-5614f37
+      - image: circleci/openjdk:8-jdk
     working_directory: ~/hoverfly-java
     steps:
       - checkout
@@ -38,6 +38,10 @@ jobs:
           name: Download deployment dependencies
           command: |
              git config core.filemode false
+             echo 'use-agent' >> ~/.gnupg/gpg.conf
+             echo 'pinentry-mode loopback' >> ~/.gnupg/gpg.conf
+             echo 'allow-loopback-pinentry' >> ~/.gnupg/gpg-agent.conf
+             echo RELOADAGENT | gpg-connect-agent
              chmod +x maven-release.sh
              ./maven-release.sh
 
