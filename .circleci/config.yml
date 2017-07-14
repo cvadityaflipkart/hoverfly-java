@@ -48,6 +48,7 @@ jobs:
              gpg --export-secret-keys > ~/.gnupg/secring.gpg --passphrase ${MAVEN_GPG_PASSPHRASE}
              ./maven-release.sh
 
+
 workflows:
   version: 2
   build:
