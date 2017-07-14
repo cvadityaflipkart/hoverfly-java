@@ -19,7 +19,8 @@ post_data=$(cat <<EOF
   "build_parameters": {
     "IS_RELEASE": true,
     "RELEASE_VERSION": "$1",
-    "NEXT_DEV_VERSION": "$2"
+    "NEXT_DEV_VERSION": "$2",
+    "CIRCLE_JOB": "deploy"
   }
 }
 EOF)

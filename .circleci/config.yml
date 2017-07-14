@@ -32,8 +32,7 @@ jobs:
       - image: circleci/openjdk:8-jdk
     working_directory: ~/hoverfly-java
     steps:
-      - attach_workspace:
-          at: /home/circleci
+      - checkout
       - run:
           name: Download deployment dependencies
           command: |
