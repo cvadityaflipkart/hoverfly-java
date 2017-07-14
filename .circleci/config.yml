@@ -45,7 +45,7 @@ jobs:
              echo RELOADAGENT | gpg-connect-agent
              chmod +x maven-release.sh
              echo ${GPG_PRIVATE_KEY} | base64 --decode -i | gpg2 --import --passphrase ${MAVEN_GPG_PASSPHRASE}
-             gpg --export-secret-keys > ~/.gnupg/secring.gpg
+             gpg --export-secret-keys > ~/.gnupg/secring.gpg --passphrase ${MAVEN_GPG_PASSPHRASE}
              ./maven-release.sh
 
 workflows:
