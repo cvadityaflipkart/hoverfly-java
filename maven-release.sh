@@ -12,7 +12,6 @@ echo "Is release?: ${IS_RELEASE}"
 echo "Release version: ${RELEASE_VERSION}"
 echo "Next dev version: ${NEXT_DEV_VERSION}"
 
-sudo apt-get -yq update && sudo apt-get -yq install gnupg2
 echo ${GPG_PRIVATE_KEY} | base64 --decode -i | gpg2 --import --passphrase ${MAVEN_GPG_PASSPHRASE}
 
 if [[ "${PROJECT_VERSION[0]}" == *"SNAPSHOT" ]]; then
