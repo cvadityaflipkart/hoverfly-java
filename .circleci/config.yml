@@ -38,11 +38,6 @@ jobs:
           name: Download deployment dependencies
           command: |
              git config core.filemode false
-             touch ~/.gnupg
-             echo 'use-agent' >> ~/.gnupg/gpg.conf
-             echo 'pinentry-mode loopback' >> ~/.gnupg/gpg.conf
-             echo 'allow-loopback-pinentry' >> ~/.gnupg/gpg-agent.conf
-             echo RELOADAGENT | gpg-connect-agent
              chmod +x maven-release.sh
              ./maven-release.sh
 
