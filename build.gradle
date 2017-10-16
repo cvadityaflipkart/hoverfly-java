@@ -54,7 +54,6 @@ allprojects {
 
     apply plugin: 'maven'
     apply plugin: 'signing'
-    apply plugin: 'java'
 
     task javadocJar(type: Jar) {
         classifier = 'javadoc'
