@@ -4,8 +4,6 @@ plugins {
     id "com.github.hierynomus.license" version "0.14.0"
     id 'com.github.ben-manes.versions' version '0.14.0'
     id 'java'
-    id 'maven'
-    id 'signing'
     id 'idea'
     id 'jacoco'
 }
@@ -17,14 +15,6 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 ext."release.useAutomaticVersion" = true
-
-allprojects {
-    ext."signing.keyId" = "$System.env.MAVEN_GPG_KEYNAME"
-    ext."signing.password" = "$System.env.MAVEN_GPG_PASSPHRASE"
-    ext."signing.secretKeyRingFile" = "$System.env.HOME/.gnupg/secring.gpg"
-    ext.ossrhUsername = "$System.env.MAVEN_CENTRAL_USERNAME"
-    ext.ossrhPassword = "$System.env.MAVEN_CENTRAL_PASSWORD"
-}
 
 repositories {
     mavenCentral()
@@ -54,79 +44,93 @@ dependencies {
     testCompile 'com.github.stefanbirkner:system-rules:1.16.0'
 }
 
+allprojects {
 
-signing {
-    sign configurations.archives
-}
+    ext."signing.keyId" = "$System.env.MAVEN_GPG_KEYNAME"
+    ext."signing.password" = "$System.env.MAVEN_GPG_PASSPHRASE"
+    ext."signing.secretKeyRingFile" = "$System.env.HOME/.gnupg/secring.gpg"
+    ext.ossrhUsername = "$System.env.MAVEN_CENTRAL_USERNAME"
+    ext.ossrhPassword = "$System.env.MAVEN_CENTRAL_PASSWORD"
 
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
+    apply plugin: 'maven'
+    apply plugin: 'signing'
+    apply plugin: 'java'
 
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
 
-artifacts {
-    archives javadocJar, sourcesJar
-}
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
 
-afterReleaseBuild.dependsOn uploadArchives
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    signing {
+        sign configurations.archives
+    }
 
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: "$ossrhUsername", password: "$ossrhPassword")
-            }
+    afterReleaseBuild.dependsOn uploadArchives
 
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: "$ossrhUsername", password: "$ossrhPassword")
-            }
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            pom.project {
-                name 'Hoverfly Java'
-                packaging 'jar'
-                // optionally artifactId can be defined here
-                description 'Hoverfly for Java. Capture and simulate HTTP(S) services in JUnit tests.'
-                url 'https://github.com/SpectoLabs/hoverfly-java'
-
-                scm {
-                    connection 'scm:git:git@github.com:SpectoLabs/hoverfly-java.git'
-                    developerConnection 'scm:git:git@github.com:SpectoLabs/hoverfly-java.git'
-                    url 'git@github.com:SpectoLabs/hoverfly-java.git'
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: "$ossrhUsername", password: "$ossrhPassword")
                 }
 
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
-                    }
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: "$ossrhUsername", password: "$ossrhPassword")
                 }
 
-                developers {
-                    developer {
-                        name 'Andrew Morgan'
-                        email 'andrew.morgan@opencredo.com'
-                        organization 'Specto Labs'
-                        organizationUrl 'http://www.specto.io'
+                pom.project {
+                    name "${project.name}"
+                    packaging 'jar'
+                    // optionally artifactId can be defined here
+                    description 'Hoverfly for Java. Capture and simulate HTTP(S) services in JUnit tests.'
+                    url 'https://github.com/SpectoLabs/hoverfly-java'
+
+                    scm {
+                        connection 'scm:git:git@github.com:SpectoLabs/hoverfly-java.git'
+                        developerConnection 'scm:git:git@github.com:SpectoLabs/hoverfly-java.git'
+                        url 'git@github.com:SpectoLabs/hoverfly-java.git'
                     }
-                    developer {
-                        name 'Tommy Situ'
-                        email 'tommy.situ@specto.io'
-                        organization 'Specto Labs'
-                        organizationUrl 'http://www.specto.io'
+
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            name 'Andrew Morgan'
+                            email 'andrew.morgan@opencredo.com'
+                            organization 'Specto Labs'
+                            organizationUrl 'http://www.specto.io'
+                        }
+                        developer {
+                            name 'Tommy Situ'
+                            email 'tommy.situ@specto.io'
+                            organization 'Specto Labs'
+                            organizationUrl 'http://www.specto.io'
+                        }
                     }
                 }
             }
         }
     }
 }
+
+
 
 license {
     header = file('license-header.txt')
