@@ -19,8 +19,8 @@ repositories {
 
 dependencies {
 
-    compileOnly 'org.junit.jupiter:junit-jupiter-api:5.0.1'
-    implementation(rootProject) {
+    compile 'org.junit.jupiter:junit-jupiter-api:5.0.1'
+    compile(rootProject) {
         exclude group: 'junit'
     }
 
