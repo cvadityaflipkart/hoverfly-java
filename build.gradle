@@ -44,7 +44,7 @@ dependencies {
     testCompile 'com.github.stefanbirkner:system-rules:1.16.0'
 }
 
-allprojects {
+allprojects { subproj ->
 
     ext."signing.keyId" = "$System.env.MAVEN_GPG_KEYNAME"
     ext."signing.password" = "$System.env.MAVEN_GPG_PASSPHRASE"
@@ -97,10 +97,10 @@ allprojects {
                 }
 
                 pom.project {
-                    name "${project.name}"
+                    name "${subproj.property('title')}"
                     packaging 'jar'
                     // optionally artifactId can be defined here
-                    description 'Hoverfly for Java. Capture and simulate HTTP(S) services in JUnit tests.'
+                    description "${subproj.property('description')}"
                     url 'https://github.com/SpectoLabs/hoverfly-java'
 
                     scm {
