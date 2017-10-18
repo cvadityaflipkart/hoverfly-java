@@ -137,13 +137,7 @@ allprojects { subproj ->
     }
 }
 
-release {
-    buildTasks = ['releaseBuild']
-}
-
-task releaseBuild {
-    dependsOn subprojects.findResults { it.tasks.findByName('build') }
-}
+updateVersion.dependsOn subprojects.findResults { it.tasks.findByName('release') }
 
 license {
     header = file('license-header.txt')
