@@ -137,10 +137,13 @@ allprojects { subproj ->
     }
 }
 
-task build {
-    dependsOn subprojects.findResults { it.tasks.findByName('build') }
+release {
+    buildTasks = ['releaseBuild']
 }
 
+task releaseBuild {
+    dependsOn subprojects.findResults { it.tasks.findByName('build') }
+}
 
 license {
     header = file('license-header.txt')
