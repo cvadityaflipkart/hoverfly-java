@@ -137,6 +137,9 @@ allprojects { subproj ->
     }
 }
 
+task build {
+    dependsOn subprojects.findResults { it.tasks.findByName('build') }
+}
 
 
 license {
