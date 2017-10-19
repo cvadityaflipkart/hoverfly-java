@@ -1,0 +1,79 @@
+== Hoverfly Java JUnit5
+
+image:https://circleci.com/gh/SpectoLabs/hoverfly-java.svg?style=shield["CircleCI", link="https://circleci.com/gh/SpectoLabs/hoverfly-java"]
+image:https://readthedocs.org/projects/hoverfly-java/badge/?version=latest["Read the Docs", link="http://hoverfly-java.readthedocs.io/en/latest/pages/junit5/junit5.html"]
+image:https://img.shields.io/maven-central/v/io.specto/hoverfly-java.svg["Maven Central", link="https://mvnrepository.com/artifact/io.specto/hoverfly-java-junit5"]
+
+JUnit 5 Extension for integrating Hoverfly into JUnit 5 testings.
+
+== Documentation
+
+Full documentation is available http://hoverfly-java.readthedocs.io/en/latest/pages/junit5/junit5.html[here^]
+
+== Maven Dependency
+
+```xml
+<dependency>
+    <groupId>io.specto</groupId>
+    <artifactId>hoverfly-java-junit5</artifactId>
+    <version>0.9.0</version>
+    <scope>test</scope>
+</dependency>
+```
+
+== Example
+=== Simulate
+``` java
+@HoverflySimulate(source = @HoverflySimulate.Source(value = "test-service-https.json", type = HoverflySimulate.SourceType.CLASSPATH))
+@ExtendWith(HoverflyExtension.class)
+class SimulationTests {
+    // ...
+}
+```
+=== Capture
+```java
+@HoverflyCapture(path = "build/resources/test/hoverfly",
+            filename = "captured-simulation.json",
+            config = @HoverflyConfig(captureAllHeaders = true, proxyLocalHost = true))
+@ExtendWith(HoverflyExtension.class)
+class CaptureTests {
+    // ...
+}
+```
+
+=== Dependency Injection for Hoverfly
+```java
+@ExtendWith(HoverflyExtension.class)
+class MyTests {
+    // ...
+
+    @BeforeEach
+    void setup(Hoverfly hoverfly) {
+        // ...
+    }
+
+    @Test
+    void shouldDoSomethingWith(Hoverfly hoverfly) {
+        // ...
+    }
+}
+```
+
+
+== Contributions
+
+Contributions are welcome!
+
+To submit a pull request you should fork the Hoverfly-Java repository, and make your change on a feature branch of your fork.
+
+== Issues
+
+Feel free to raise an issues on Github.
+
+== License
+
+Apache License version 2.0.
+
+(c) SpectoLabs 2017.
+
+
