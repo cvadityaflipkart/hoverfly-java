@@ -34,8 +34,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Download deployment dependencies
+          name: Config release dependencies
           command: |
+             apt-get install gnupg2
              git config core.filemode false
              mkdir ~/.gnupg
              echo 'use-agent' >> ~/.gnupg/gpg.conf
@@ -45,8 +46,9 @@ jobs:
              chmod +x maven-release.sh
              echo ${GPG_PRIVATE_KEY} | base64 --decode -i | gpg2 --import --passphrase ${MAVEN_GPG_PASSPHRASE}
              gpg --export-secret-keys > ~/.gnupg/secring.gpg --passphrase ${MAVEN_GPG_PASSPHRASE}
-             ./maven-release.sh
-
+      - run:
+          name: Run Maven release
+          command: ./maven-release.sh
 
 workflows:
   version: 2
