@@ -29,7 +29,7 @@ public class SslConfigurer {
 
     private static final String TLS_PROTOCOL = "TLSv1.2";
     private static final URL DEFAULT_HOVERFLY_CUSTOM_CA_CERT = findResourceOnClasspath("cert.pem");
-    private static final SSLSocketFactory defaultSSLFactory = HttpsURLConnection.getDefaultSSLSocketFactory();
+    private static final SSLSocketFactory DEFAULT_SSL_SOCKET_FACTORY = HttpsURLConnection.getDefaultSSLSocketFactory();
 
     private SSLContext sslContext;
     private TrustManager[] trustManagers;
@@ -54,6 +54,10 @@ public class SslConfigurer {
             throw  new IllegalStateException("Trust manager for Hoverfly custom CA cert has not been set.");
         }
         return trustManager;
+    }
+
+    public void reset() {
+        HttpsURLConnection.setDefaultSSLSocketFactory(DEFAULT_SSL_SOCKET_FACTORY);
     }
 
     void setDefaultSslContext() {
@@ -144,9 +148,5 @@ public class SslConfigurer {
                     .map(tm -> (X509TrustManager) tm)
                     .findFirst()
                     .orElseThrow(IllegalStateException::new);
-    }
-
-    public void reset() {
-      HttpsURLConnection.setDefaultSSLSocketFactory(defaultSSLFactory);
     }
 }

@@ -31,3 +31,16 @@ You can configure Hoverfly to capture request headers which is turned off by def
 
     configs().captureHeaders("Accept", "Authorization")
     configs().captureAllHeaders()
+
+You can configure Hoverfly to run as a web server on default port 8500:
+
+.. code-block:: java
+
+    configs().asWebServer()
+
+You can configure Hoverfly to skip TSL verification. This option allows Hoverfly to perform "insecure" SSL connections to target server that uses invalid certificate (eg. self-signed certificate):
+
+.. code-block:: java
+
+    configs().disableTlsVerification()
+
