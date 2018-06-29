@@ -18,67 +18,42 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import static io.specto.hoverfly.junit.core.model.FieldMatcher.fromString;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Request {
 
-    @JsonDeserialize(using = FieldMatcherDeserializer.class)
-    private final FieldMatcher path;
-    @JsonDeserialize(using = FieldMatcherDeserializer.class)
-    private final FieldMatcher method;
-    @JsonDeserialize(using = FieldMatcherDeserializer.class)
-    private final FieldMatcher destination;
-    @JsonDeserialize(using = FieldMatcherDeserializer.class)
-    private final FieldMatcher scheme;
-    @JsonDeserialize(using = FieldMatcherDeserializer.class)
-    private final FieldMatcher query;
-    @JsonDeserialize(using = FieldMatcherDeserializer.class)
-    private final FieldMatcher body;
-    private final Map<String, List<String>> headers;
+    private final List<RequestFieldMatcher> path;
+
+    private final List<RequestFieldMatcher> method;
+
+    private final List<RequestFieldMatcher> destination;
+
+    private final List<RequestFieldMatcher> scheme;
+
+    private final Map<String, List<RequestFieldMatcher>> query;
+
+    private final List<RequestFieldMatcher> body;
+
+    private final Map<String, List<RequestFieldMatcher>> headers;
+
     private final Map<String, String> requiresState;
 
-    private RequestType requestType;
-
-    @Deprecated
-    public Request(String path,
-                   String method,
-                   String destination,
-                   String scheme,
-                   String query,
-                   String body,
-                   Map<String, List<String>> headers,
-                   Map<String, String> requiresState) {
-        this.path = fromString(path);
-        this.method = fromString(method);
-        this.destination = fromString(destination);
-        this.scheme = fromString(scheme);
-        this.query = fromString(query);
-        this.body = fromString(body);
-        this.headers = headers;
-        this.requiresState = requiresState;
-    }
-
-
     @JsonCreator
-    public Request(@JsonProperty("path") FieldMatcher path,
-                   @JsonProperty("method") FieldMatcher method,
-                   @JsonProperty("destination") FieldMatcher destination,
-                   @JsonProperty("scheme") FieldMatcher scheme,
-                   @JsonProperty("query") FieldMatcher query,
-                   @JsonProperty("body") FieldMatcher body,
-                   @JsonProperty("headers") Map<String, List<String>> headers,
-                   @JsonProperty("requiresState") Map<String, String> requiresState) {
+    public Request(@JsonProperty("path") List<RequestFieldMatcher> path,
+                     @JsonProperty("method") List<RequestFieldMatcher> method,
+                     @JsonProperty("destination") List<RequestFieldMatcher> destination,
+                     @JsonProperty("scheme") List<RequestFieldMatcher> scheme,
+                     @JsonProperty("query") Map<String, List<RequestFieldMatcher>> query,
+                     @JsonProperty("body") List<RequestFieldMatcher> body,
+                     @JsonProperty("headers") Map<String, List<RequestFieldMatcher>> headers,
+                     @JsonProperty("requiresState") Map<String, String> requiresState) {
         this.path = path;
         this.method = method;
         this.destination = destination;
@@ -89,41 +64,32 @@ public class Request {
         this.requiresState = requiresState;
     }
 
-    public FieldMatcher getPath() {
+    public List<RequestFieldMatcher> getPath() {
         return path;
     }
 
-    public FieldMatcher getMethod() {
+    public List<RequestFieldMatcher> getMethod() {
         return method;
     }
 
-    public FieldMatcher getDestination() {
+    public List<RequestFieldMatcher> getDestination() {
         return destination;
     }
 
-    public FieldMatcher getScheme() {
+    public List<RequestFieldMatcher> getScheme() {
         return scheme;
     }
 
-    public FieldMatcher getQuery() {
+    public Map<String, List<RequestFieldMatcher>> getQuery() {
         return query;
     }
 
-    public FieldMatcher getBody() {
+    public List<RequestFieldMatcher> getBody() {
         return body;
     }
 
-    public Map<String, List<String>> getHeaders() {
-        return requestType == RequestType.RECORDING ? Collections.emptyMap() : headers;
-    }
-
-
-    public RequestType getRequestType() {
-        return requestType;
-    }
-
-    public void setRequestType(RequestType requestType) {
-        this.requestType = requestType;
+    public Map<String, List<RequestFieldMatcher>> getHeaders() {
+        return headers;
     }
 
     public Map<String, String> getRequiresState() {
@@ -132,51 +98,51 @@ public class Request {
 
     public static class Builder {
 
-        private FieldMatcher path;
-        private FieldMatcher method;
-        private FieldMatcher destination;
-        private FieldMatcher scheme;
-        private FieldMatcher query;
-        private FieldMatcher body;
-        private Map<String, List<String>> headers;
+        private List<RequestFieldMatcher> path;
+        private List<RequestFieldMatcher> method;
+        private List<RequestFieldMatcher> destination;
+        private List<RequestFieldMatcher> scheme;
+        private Map<String, List<RequestFieldMatcher>> query;
+        private List<RequestFieldMatcher> body;
+        private Map<String, List<RequestFieldMatcher>> headers;
         private Map<String, String> requiresState;
 
-        public Builder path(FieldMatcher path) {
+        public Request.Builder path(List<RequestFieldMatcher> path) {
             this.path = path;
             return this;
         }
 
-        public Builder method(FieldMatcher method) {
+        public Request.Builder method(List<RequestFieldMatcher> method) {
             this.method = method;
             return this;
         }
 
-        public Builder destination(FieldMatcher destination) {
+        public Request.Builder destination(List<RequestFieldMatcher> destination) {
             this.destination = destination;
             return this;
         }
 
-        public Builder scheme(FieldMatcher scheme) {
+        public Request.Builder scheme(List<RequestFieldMatcher> scheme) {
             this.scheme = scheme;
             return this;
         }
 
-        public Builder query(FieldMatcher query) {
+        public Request.Builder query(Map<String, List<RequestFieldMatcher>> query) {
             this.query = query;
             return this;
         }
 
-        public Builder body(FieldMatcher body) {
+        public Request.Builder body(List<RequestFieldMatcher> body) {
             this.body = body;
             return this;
         }
 
-        public Builder headers(Map<String, List<String>> headers) {
+        public Request.Builder headers(Map<String, List<RequestFieldMatcher>> headers) {
             this.headers = headers;
             return this;
         }
 
-        public Builder requiresState(Map<String, String> requiresState) {
+        public Request.Builder requiresState(Map<String, String> requiresState) {
             this.requiresState = requiresState;
             return this;
         }
@@ -188,12 +154,12 @@ public class Request {
 
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj, "requestType");
+        return EqualsBuilder.reflectionEquals(this, obj);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this, "requestType");
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 
     @Override
@@ -205,10 +171,5 @@ public class Request {
         }
     }
 
-    enum RequestType {
-        @JsonProperty("template")
-        TEMPLATE,
-        @JsonProperty("recording")
-        RECORDING
-    }
+
 }

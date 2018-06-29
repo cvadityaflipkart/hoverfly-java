@@ -24,21 +24,15 @@ import org.slf4j.LoggerFactory;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HoverflyMetaData {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HoverflyMetaData.class);
     private String schemaVersion;
 
     public HoverflyMetaData() {
-        schemaVersion = "v4";
+        schemaVersion = "v5";
     }
 
     @JsonCreator
     public HoverflyMetaData(@JsonProperty("schemaVersion") String schemaVersion) {
-        this();
         this.schemaVersion = schemaVersion;
-        if ("v1".equals(schemaVersion)){
-            LOGGER.info("Upgrading v1 schema version to v2");
-            this.schemaVersion = "v2";
-        }
     }
 
     public String getSchemaVersion() {

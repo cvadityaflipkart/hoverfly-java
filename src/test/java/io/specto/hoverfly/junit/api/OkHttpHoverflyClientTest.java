@@ -3,6 +3,7 @@ package io.specto.hoverfly.junit.api;
 
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,11 +16,7 @@ import io.specto.hoverfly.junit.api.view.StateView;
 import io.specto.hoverfly.junit.core.Hoverfly;
 import io.specto.hoverfly.junit.core.SimulationSource;
 import io.specto.hoverfly.junit.core.config.HoverflyConfiguration;
-import io.specto.hoverfly.junit.core.model.FieldMatcher;
-import io.specto.hoverfly.junit.core.model.Journal;
-import io.specto.hoverfly.junit.core.model.JournalEntry;
-import io.specto.hoverfly.junit.core.model.Request;
-import io.specto.hoverfly.junit.core.model.Simulation;
+import io.specto.hoverfly.junit.core.model.*;
 import org.assertj.core.util.Lists;
 import org.junit.After;
 import org.junit.Before;
@@ -30,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static io.specto.hoverfly.junit.core.HoverflyMode.CAPTURE;
 import static io.specto.hoverfly.junit.core.HoverflyMode.SIMULATE;
+import static io.specto.hoverfly.junit.core.model.RequestFieldMatcher.newGlobMatcher;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class OkHttpHoverflyClientTest {
@@ -240,7 +238,7 @@ public class OkHttpHoverflyClientTest {
 
 
         Journal journal = client.searchJournal(new Request.Builder()
-                .destination(FieldMatcher.wildCardMatches("hoverfly.*"))
+                .destination(Collections.singletonList(newGlobMatcher("hoverfly.*")))
                 .build());
 
         assertThat(journal.getEntries()).hasSize(1);

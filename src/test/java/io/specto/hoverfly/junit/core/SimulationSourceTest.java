@@ -17,11 +17,11 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Set;
 
+import static io.specto.hoverfly.assertions.Assertions.assertThat;
 import static io.specto.hoverfly.junit.dsl.HoverflyDsl.service;
 import static io.specto.hoverfly.junit.dsl.ResponseCreators.success;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 
@@ -105,8 +105,8 @@ public class SimulationSourceTest {
         Set<RequestResponsePair> pairs = actual.getHoverflyData().getPairs();
         assertThat(pairs).hasSize(1);
         RequestResponsePair pair = pairs.iterator().next();
-        assertThat(pair.getRequest().getDestination().getExactMatch()).isEqualTo("www.test-service.com");
-        assertThat(pair.getRequest().getPath().getExactMatch()).isEqualTo("/foo");
+        assertThat(pair.getRequest()).hasDestinationContainsOneExactMatcher("www.test-service.com");
+        assertThat(pair.getRequest()).hasPathContainsOneExactMatcher("/foo");
         assertThat(pair.getResponse().getStatus()).isEqualTo(200);
 
     }

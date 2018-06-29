@@ -25,6 +25,8 @@ import static io.specto.hoverfly.junit.dsl.matchers.HoverflyMatchers.any;
 import static io.specto.hoverfly.junit.dsl.matchers.HoverflyMatchers.equalsTo;
 import static io.specto.hoverfly.junit.dsl.matchers.RequestMatcherType.GLOB_MATCH;
 import static io.specto.hoverfly.junit.dsl.matchers.RequestMatcherType.REGEX_MATCH;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 
 /**
  * A builder for {@link Request}
@@ -172,7 +174,9 @@ public class RequestMatcherBuilder {
             query = buildQuery();
         }
 
-        return new Request(path, method, destination, scheme, query, body, headers, requiresState);
+        // TODO upgrade, as it has builder, the constructor should probably private
+//        return new Request(path, method, destination, scheme, query, body, headers, requiresState);
+        return new Request(emptyList(), emptyList(), emptyList(), emptyList(), emptyMap(), emptyList(), emptyMap(), emptyMap());
     }
 
     private FieldMatcher buildQuery() {

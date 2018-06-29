@@ -1,13 +1,12 @@
 package io.specto.hoverfly.assertions;
 
 import io.specto.hoverfly.junit.core.model.Request;
+import io.specto.hoverfly.junit.core.model.RequestFieldMatcher;
 import org.assertj.core.api.AbstractAssert;
 
-import java.util.Arrays;
-import java.util.Set;
+import java.util.List;
 
-import static io.specto.hoverfly.assertions.Header.header;
-import static java.util.stream.Collectors.toSet;
+import static io.specto.hoverfly.junit.core.model.RequestFieldMatcher.newExactMatcher;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RequestMatcherAssert extends AbstractAssert<RequestMatcherAssert, Request> {
@@ -15,11 +14,21 @@ public class RequestMatcherAssert extends AbstractAssert<RequestMatcherAssert, R
         super(actual, RequestMatcherAssert.class);
     }
 
-    public RequestMatcherAssert hasBody(final String body) {
+    public RequestMatcherAssert hasBodyContainsOneExactMatcher(final String value) {
         isNotNull();
+        assertThat(actual.getBody()).containsExactly(newExactMatcher(value));
+        return this;
+    }
 
-        assertThat(actual.getBody().getExactMatch()).isEqualTo(body);
+    public RequestMatcherAssert hasDestinationContainsOneExactMatcher(final String value) {
+        isNotNull();
+        assertThat(actual.getBody()).containsExactly(newExactMatcher(value));
+        return this;
+    }
 
+    public RequestMatcherAssert hasPathContainsOneExactMatcher(final String value) {
+        isNotNull();
+        assertThat(actual.getBody()).containsExactly(newExactMatcher(value));
         return this;
     }
 
