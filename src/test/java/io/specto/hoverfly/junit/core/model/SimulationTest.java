@@ -14,7 +14,6 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Collections;
-import java.util.Set;
 
 import static io.specto.hoverfly.junit.core.model.RequestFieldMatcher.*;
 import static java.util.Collections.singletonList;
@@ -108,13 +107,13 @@ public class SimulationTest {
 
     private Simulation getV3Simulation() {
         HoverflyData data = getTestHoverflyData(getTestRequestBuilder(), getTestResponseBuilder());
-        HoverflyMetaData meta = new HoverflyMetaData("v3");
+        HoverflyMetaData meta = new HoverflyMetaData("v3", "", "");
         return new Simulation(data, meta);
     }
 
     private Simulation getV2Simulation() {
         HoverflyData data = getTestHoverflyData(getTestRequestBuilder(), getTestResponseBuilder());
-        HoverflyMetaData meta = new HoverflyMetaData("v2");
+        HoverflyMetaData meta = new HoverflyMetaData("v2", "", "");
         return new Simulation(data, meta);
     }
 

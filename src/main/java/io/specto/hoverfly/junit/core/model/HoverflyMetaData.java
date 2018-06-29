@@ -12,41 +12,57 @@
  */
 package io.specto.hoverfly.junit.core.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class HoverflyMetaData {
 
+    private static final List<String> EXCLUDED_FIELDS = Arrays.asList("hoverflyVersion", "timeExported");
+
     private String schemaVersion;
+    private String hoverflyVersion;
+    private String timeExported;
 
     public HoverflyMetaData() {
         schemaVersion = "v5";
     }
 
     @JsonCreator
-    public HoverflyMetaData(@JsonProperty("schemaVersion") String schemaVersion) {
+    public HoverflyMetaData(@JsonProperty("schemaVersion") String schemaVersion,
+                            @JsonProperty("hoverflyVersion") String hoverflyVersion,
+                            @JsonProperty("timeExported") String timeExported) {
         this.schemaVersion = schemaVersion;
+        this.hoverflyVersion = hoverflyVersion;
+        this.timeExported = timeExported;
     }
 
     public String getSchemaVersion() {
         return schemaVersion;
     }
 
+    public String getHoverflyVersion() {
+        return hoverflyVersion;
+    }
+
+    public String getTimeExported() {
+        return timeExported;
+    }
+
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
+        return EqualsBuilder.reflectionEquals(this, obj, EXCLUDED_FIELDS);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
+        return HashCodeBuilder.reflectionHashCode(this, EXCLUDED_FIELDS);
     }
 
     @Override

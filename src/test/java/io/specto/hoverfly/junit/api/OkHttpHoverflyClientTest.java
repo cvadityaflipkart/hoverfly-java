@@ -149,7 +149,7 @@ public class OkHttpHoverflyClientTest {
     public void shouldBeAbleToGetSimulation() {
         Simulation simulation = hoverfly.getSimulation();
 
-        assertThat(simulation).isEqualTo(SimulationSource.empty().getSimulation());
+        assertThat(simulation).isEqualTo(Simulation.newEmptyInstance());
     }
 
     @Test

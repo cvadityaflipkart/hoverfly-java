@@ -477,21 +477,6 @@ public class HoverflyTest {
     }
 
     @Test
-    public void shouldImportExpectedSimulationInDiffMode() throws Exception {
-        // given
-        startDefaultHoverfly();
-        URL resource = Resources.getResource("test-service.json");
-        Simulation importedSimulation = mapper.readValue(resource, Simulation.class);
-
-        // when
-        hoverfly.simulate(classpath("test-service.json"));
-
-        // then
-        Simulation exportedSimulation = hoverfly.getSimulation();
-        assertThat(exportedSimulation.getHoverflyData()).isEqualTo(importedSimulation.getHoverflyData());
-    }
-
-    @Test
     public void shouldTolerateFailureOnResetDiff() {
         // given
         hoverfly = new Hoverfly(DIFF);

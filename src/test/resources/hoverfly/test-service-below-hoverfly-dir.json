@@ -2,6 +2,44 @@
 	"data": {
 		"pairs": [
 			{
+				"request": {
+					"path": [
+						{
+							"matcher": "exact",
+							"value": "/api/bookings"
+						}
+					],
+					"method": [
+						{
+							"matcher": "exact",
+							"value": "POST"
+						}
+					],
+					"destination": [
+						{
+							"matcher": "exact",
+							"value": "www.my-test.com"
+						}
+					],
+					"scheme": [
+						{
+							"matcher": "exact",
+							"value": ""
+						}
+					],
+					"body": [
+						{
+							"matcher": "exact",
+							"value": "{\"flightId\": \"1\"}"
+						}
+					],
+					"deprecatedQuery": [
+						{
+							"matcher": "exact",
+							"value": ""
+						}
+					]
+				},
 				"response": {
 					"status": 201,
 					"body": "",
@@ -10,30 +48,49 @@
 						"Location": [
 							"http://localhost/api/bookings/1"
 						]
-					}
-				},
-				"request": {
-					"path": {
-						"exactMatch": "/api/bookings"
 					},
-					"method": {
-						"exactMatch": "POST"
-					},
-					"destination": {
-						"exactMatch": "www.my-test.com"
-					},
-					"scheme": {
-						"exactMatch": ""
-					},
-					"query": {
-						"exactMatch": ""
-					},
-					"body": {
-						"exactMatch": "{\"flightId\": \"1\"}"
-					}
+					"templated": false
 				}
 			},
 			{
+				"request": {
+					"path": [
+						{
+							"matcher": "exact",
+							"value": "/api/bookings/1"
+						}
+					],
+					"method": [
+						{
+							"matcher": "exact",
+							"value": "GET"
+						}
+					],
+					"destination": [
+						{
+							"matcher": "exact",
+							"value": "www.my-test.com"
+						}
+					],
+					"scheme": [
+						{
+							"matcher": "exact",
+							"value": ""
+						}
+					],
+					"body": [
+						{
+							"matcher": "exact",
+							"value": ""
+						}
+					],
+					"deprecatedQuery": [
+						{
+							"matcher": "exact",
+							"value": ""
+						}
+					]
+				},
 				"response": {
 					"status": 200,
 					"body": "{\"bookingId\":\"1\",\"origin\":\"London\",\"destination\":\"Singapore\",\"time\":\"2011-09-01T12:30\",\"_links\":{\"self\":{\"href\":\"http://localhost/api/bookings/1\"}}}",
@@ -42,27 +99,8 @@
 						"Content-Type": [
 							"application/json"
 						]
-					}
-				},
-				"request": {
-					"path": {
-						"exactMatch": "/api/bookings/1"
 					},
-					"method": {
-						"exactMatch": "GET"
-					},
-					"destination": {
-						"exactMatch": "www.my-test.com"
-					},
-					"scheme": {
-						"exactMatch": ""
-					},
-					"query": {
-						"exactMatch": ""
-					},
-					"body": {
-						"exactMatch": ""
-					}
+					"templated": false
 				}
 			}
 		],
@@ -71,8 +109,8 @@
 		}
 	},
 	"meta": {
-		"schemaVersion": "v2",
-		"hoverflyVersion": "v0.11.2",
-		"timeExported": "2017-05-12T00:18:41+01:00"
+		"schemaVersion": "v5",
+		"hoverflyVersion": "v0.17.1",
+		"timeExported": "2018-06-29T23:11:10+01:00"
 	}
 }

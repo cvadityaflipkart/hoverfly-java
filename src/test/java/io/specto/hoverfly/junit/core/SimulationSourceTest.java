@@ -2,11 +2,7 @@ package io.specto.hoverfly.junit.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
-import io.specto.hoverfly.junit.core.model.GlobalActions;
-import io.specto.hoverfly.junit.core.model.HoverflyData;
-import io.specto.hoverfly.junit.core.model.HoverflyMetaData;
-import io.specto.hoverfly.junit.core.model.RequestResponsePair;
-import io.specto.hoverfly.junit.core.model.Simulation;
+import io.specto.hoverfly.junit.core.model.*;
 import io.specto.hoverfly.webserver.ImportTestWebServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -14,6 +10,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.Set;
 
@@ -27,8 +24,9 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 public class SimulationSourceTest {
 
-    private static final Simulation EXPECTED = getSimulation();
+    private static final String EXPECTED = getSimulation();
     private static URL url;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeClass
     public static void setUp() {
@@ -40,9 +38,9 @@ public class SimulationSourceTest {
         ImportTestWebServer.terminate();
     }
 
-    private static Simulation getSimulation() {
+    private static String getSimulation() {
         try {
-            return new ObjectMapper().readValue(Resources.getResource("test-service.json"), Simulation.class);
+            return Resources.toString(Resources.getResource("test-service.json"), Charset.defaultCharset());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -52,7 +50,7 @@ public class SimulationSourceTest {
     public void shouldCreateSimulationFromClasspath() {
 
         // When
-        Simulation actual = SimulationSource.classpath("test-service.json").getSimulation();
+        String actual = SimulationSource.classpath("test-service.json").getSimulation();
 
         // Then
         assertThat(actual).isNotNull();
@@ -62,7 +60,7 @@ public class SimulationSourceTest {
     @Test
     public void shouldCreateSimulationFromClasspathRelativeToHoverfly() {
         // When
-        Simulation actual = SimulationSource.defaultPath("test-service-below-hoverfly-dir.json").getSimulation();
+        String actual = SimulationSource.defaultPath("test-service-below-hoverfly-dir.json").getSimulation();
 
         // Then
         assertThat(actual).isNotNull();
@@ -74,7 +72,7 @@ public class SimulationSourceTest {
     public void shouldCreateSimulationFromUrl() {
 
         // When
-        Simulation actual = SimulationSource.url(url).getSimulation();
+        String actual = SimulationSource.url(url).getSimulation();
 
         // Then
         assertThat(actual).isNotNull();
@@ -85,7 +83,7 @@ public class SimulationSourceTest {
     public void shouldCreateSimulationFromUrlString() {
 
         // When
-        Simulation actual = SimulationSource.url(url.toString()).getSimulation();
+        String actual = SimulationSource.url(url.toString()).getSimulation();
 
         // Then
         assertThat(actual).isNotNull();
@@ -93,16 +91,17 @@ public class SimulationSourceTest {
     }
 
     @Test
-    public void shouldCreateSimulationFromDsl() {
+    public void shouldCreateSimulationFromDsl() throws Exception {
 
         // When
         SimulationSource simulationSource = SimulationSource.dsl(
                 service("www.test-service.com").get("/foo").willReturn(success()));
 
-        Simulation actual = simulationSource.getSimulation();
+        String actual = simulationSource.getSimulation();
 
         // Then
-        Set<RequestResponsePair> pairs = actual.getHoverflyData().getPairs();
+        Simulation simulation = objectMapper.readValue(actual, Simulation.class);
+        Set<RequestResponsePair> pairs = simulation.getHoverflyData().getPairs();
         assertThat(pairs).hasSize(1);
         RequestResponsePair pair = pairs.iterator().next();
         assertThat(pair.getRequest()).hasDestinationContainsOneExactMatcher("www.test-service.com");
@@ -115,7 +114,7 @@ public class SimulationSourceTest {
     public void shouldCreateSimulationFromFile() throws Exception {
 
         // When
-        Simulation actual = SimulationSource.file(Paths.get(Resources.getResource("test-service.json").toURI())).getSimulation();
+        String actual = SimulationSource.file(Paths.get(Resources.getResource("test-service.json").toURI())).getSimulation();
 
         // Then
         assertThat(actual).isNotNull();
@@ -123,13 +122,14 @@ public class SimulationSourceTest {
     }
 
     @Test
-    public void shouldCreateSimulationFromSimulationObject() {
+    public void shouldCreateSimulationFromSimulationObject() throws Exception {
 
         // Given
-        Simulation expected = new Simulation(new HoverflyData(emptySet(), new GlobalActions(emptyList())), new HoverflyMetaData());
+        Simulation simulation = new Simulation(new HoverflyData(emptySet(), new GlobalActions(emptyList())), new HoverflyMetaData());
+        String expected = objectMapper.writeValueAsString(simulation);
 
         // When
-        Simulation actual = SimulationSource.simulation(expected).getSimulation();
+        String actual = SimulationSource.simulation(simulation).getSimulation();
 
         // Then
         assertThat(actual).isEqualTo(expected);
@@ -140,24 +140,12 @@ public class SimulationSourceTest {
         assertThat(SimulationSource.empty().getSimulation());
     }
 
-    @Test
-    public void shouldThrowExceptionWhenSimulationDataFormatIsNotRecognized() {
-
-        // When
-        Throwable throwable = catchThrowable(() -> SimulationSource.classpath("simulations/legacy-simulation.json").getSimulation());
-
-        // Then
-        assertThat(throwable)
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Cannot load classpath resource: 'simulations/legacy-simulation.json'");
-
-    }
 
     @Test
     public void shouldThrowExceptionWhenUrlStringIsInvalid() {
 
         // When
-        Throwable throwable = catchThrowable(() -> SimulationSource.url("http://foo.com").getSimulation());
+        Throwable throwable = catchThrowable(() -> SimulationSource.url("htttp://foo.com").getSimulation());
 
         // Then
         assertThat(throwable)
@@ -166,10 +154,10 @@ public class SimulationSourceTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenUrlIsInvalid() {
+    public void shouldThrowExceptionWhenUrlResourceIsNotAvailable() {
 
         // When
-        Throwable throwable = catchThrowable(() -> SimulationSource.url(new URL("http://foo.com")).getSimulation());
+        Throwable throwable = catchThrowable(() -> SimulationSource.url(new URL("http://localhost:12345/simulation")).getSimulation());
 
         // Then
         assertThat(throwable)

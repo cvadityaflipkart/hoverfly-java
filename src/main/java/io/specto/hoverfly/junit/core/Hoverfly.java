@@ -255,7 +255,7 @@ public class Hoverfly implements AutoCloseable {
     public void simulate(SimulationSource simulationSource) {
         LOGGER.info("Importing simulation data to Hoverfly");
 
-        final Simulation simulation = simulationSource.getSimulation();
+        final String simulation = simulationSource.getSimulation();
 
         hoverflyClient.setSimulation(simulation);
     }

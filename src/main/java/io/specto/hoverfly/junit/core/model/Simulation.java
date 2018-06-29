@@ -20,6 +20,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -54,6 +55,10 @@ public class Simulation {
 
     public HoverflyMetaData getHoverflyMetaData() {
         return hoverflyMetaData;
+    }
+
+    public static Simulation newEmptyInstance() {
+        return new Simulation(new HoverflyData(Collections.emptySet(), new GlobalActions(Collections.emptyList())), new HoverflyMetaData());
     }
 
     @Override

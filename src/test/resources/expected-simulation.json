@@ -2,9 +2,35 @@
 	"data": {
 		"pairs": [
 			{
+				"request": {
+					"path": [
+						{
+							"matcher": "exact",
+							"value": ""
+						}
+					],
+					"method": [
+						{
+							"matcher": "exact",
+							"value": "GET"
+						}
+					],
+					"scheme": [
+						{
+							"matcher": "exact",
+							"value": "http"
+						}
+					],
+					"body": [
+						{
+							"matcher": "exact",
+							"value": ""
+						}
+					]
+				},
 				"response": {
 					"status": 200,
-					"body": "\u003ch1\u003eHello World\u003c/h1\u003e\n",
+					"body": "<h1>Hello World</h1>\n",
 					"encodedBody": false,
 					"headers": {
 						"Content-Length": [
@@ -19,24 +45,8 @@
 						"Server": [
 							"Jetty(9.3.11.v20160721)"
 						]
-					}
-				},
-				"request": {
-					"path": {
-						"exactMatch": ""
 					},
-					"method": {
-						"exactMatch": "GET"
-					},
-					"scheme": {
-						"exactMatch": "http"
-					},
-					"query": {
-						"exactMatch": ""
-					},
-					"body": {
-						"exactMatch": ""
-					}
+					"templated": false
 				}
 			}
 		],
@@ -45,6 +55,6 @@
 		}
 	},
 	"meta": {
-		"schemaVersion": "v4"
+		"schemaVersion": "v5"
 	}
 }

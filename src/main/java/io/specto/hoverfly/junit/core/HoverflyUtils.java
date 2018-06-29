@@ -12,17 +12,25 @@
  */
 package io.specto.hoverfly.junit.core;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import io.specto.hoverfly.junit.core.model.Simulation;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.URL;
 import java.util.Optional;
+import java.util.Scanner;
 
 /**
  * Utils for Hoverfly
  */
 class HoverflyUtils {
 
+    private static ObjectWriter OBJECT_WRITER = new ObjectMapper().writerFor(Simulation.class);
 
     static void checkPortInUse(int port) {
         try (final ServerSocket ignored = new ServerSocket(port, 1, InetAddress.getLoopbackAddress())) {
@@ -40,4 +48,23 @@ class HoverflyUtils {
                 .orElseThrow(() -> new IllegalArgumentException("Resource not found with name: " + resourceName));
     }
 
+    static InputStream getClasspathResourceAsStream(String resourceName) {
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        return Optional.ofNullable(classLoader.getResourceAsStream(resourceName))
+                .orElseThrow(() -> new IllegalArgumentException("Resource not found with name: " + resourceName));
+    }
+
+
+    static String convertStreamToString(InputStream is) {
+        Scanner s = new Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
+
+    static String writeSimulationAsString(Simulation simulation) {
+        try {
+            return OBJECT_WRITER.writeValueAsString(simulation);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Failed to serialize simulation object", e);
+        }
+    }
 }

@@ -1,29 +1,27 @@
 package io.specto.hoverfly.junit.core;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import io.specto.hoverfly.junit.core.model.*;
 import io.specto.hoverfly.junit.dsl.HoverflyDsl;
 import io.specto.hoverfly.junit.dsl.StubServiceBuilder;
 
-import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
-import static io.specto.hoverfly.junit.core.HoverflyUtils.findResourceOnClasspath;
+import static io.specto.hoverfly.junit.core.HoverflyUtils.*;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 
 /**
- * Interface for converting a resource into a {@link Simulation}
+ * Interface for reading simulation source as a String
  */
 @FunctionalInterface
 public interface SimulationSource {
-
-    ObjectReader OBJECT_READER = new ObjectMapper().readerFor(Simulation.class);
-    String HOVERFLY_ROOT = "hoverfly/";
 
     /**
      * Creates a simulation from a URL
@@ -33,9 +31,9 @@ public interface SimulationSource {
      */
     static SimulationSource url(final URL url) {
         return () -> {
-            try {
-                return OBJECT_READER.readValue(url);
-            } catch (IOException e) {
+            try (InputStream is = url.openStream()) {
+                return convertStreamToString(is);
+            } catch (Exception e) {
                 throw new IllegalArgumentException("Cannot read simulation", e);
             }
         };
@@ -49,9 +47,9 @@ public interface SimulationSource {
      */
     static SimulationSource url(final String url) {
         return () -> {
-            try {
-                return OBJECT_READER.readValue(new URL(url));
-            } catch (IOException e) {
+            try (InputStream is = new URL(url).openStream()) {
+                return convertStreamToString(is);
+            } catch (Exception e) {
                 throw new IllegalArgumentException("Cannot read simulation", e);
             }
         };
@@ -65,9 +63,9 @@ public interface SimulationSource {
      */
     static SimulationSource classpath(final String classpath) {
         return () -> {
-            try {
-                return OBJECT_READER.readValue(findResourceOnClasspath(classpath));
-            } catch (IOException e) {
+            try (InputStream is = getClasspathResourceAsStream(classpath)) {
+                return convertStreamToString(is);
+            } catch (Exception e) {
                 throw new IllegalArgumentException("Cannot load classpath resource: '" + classpath + "'", e);
             }
         };
@@ -80,10 +78,10 @@ public interface SimulationSource {
      */
     static SimulationSource defaultPath(String pathString) {
         return () -> {
-            try {
-                final String fullClasspath = HOVERFLY_ROOT + pathString;
-                return OBJECT_READER.readValue(findResourceOnClasspath(fullClasspath));
-            } catch (IOException e) {
+            final String fullClasspath = HoverflyConstants.DEFAULT_HOVERFLY_RESOURCE_DIR + "/" + pathString;
+            try (InputStream is = getClasspathResourceAsStream(fullClasspath)) {
+                return convertStreamToString(is);
+            } catch (Exception e) {
                 throw new IllegalArgumentException("Cannot load default path resource: '" + pathString + "'", e);
             }
         };
@@ -97,9 +95,9 @@ public interface SimulationSource {
      */
     static SimulationSource file(final Path path) {
         return () -> {
-            try {
-                return OBJECT_READER.readValue(path.toFile());
-            } catch (IOException e) {
+            try(InputStream is = Files.newInputStream(path)) {
+                return convertStreamToString(is);
+            } catch (Exception e) {
                 throw new IllegalArgumentException("Cannot load file resource: '" + path.toString() + "'", e);
             }
         };
@@ -125,7 +123,7 @@ public interface SimulationSource {
                     .flatMap(List::stream)
                     .collect(toList());
 
-            return new Simulation(new HoverflyData(pairs, new GlobalActions(delaySettings)), new HoverflyMetaData());
+            return writeSimulationAsString(new Simulation(new HoverflyData(pairs, new GlobalActions(delaySettings)), new HoverflyMetaData()));
         };
     }
 
@@ -136,7 +134,7 @@ public interface SimulationSource {
      * @return the simulation
      */
     static SimulationSource simulation(final Simulation simulation) {
-        return () -> simulation;
+        return () -> writeSimulationAsString(simulation);
     }
 
     /**
@@ -145,9 +143,9 @@ public interface SimulationSource {
      * @return an empty simulation
      */
     static SimulationSource empty() {
-        return () -> new Simulation(new HoverflyData(Collections.emptySet(), new GlobalActions(Collections.emptyList())), new HoverflyMetaData());
+        return () -> writeSimulationAsString(Simulation.newEmptyInstance());
     }
 
+    String getSimulation();
 
-    Simulation getSimulation();
 }
