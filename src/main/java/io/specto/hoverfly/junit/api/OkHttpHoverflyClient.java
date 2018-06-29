@@ -3,6 +3,7 @@ package io.specto.hoverfly.junit.api;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.specto.hoverfly.junit.api.command.DestinationCommand;
@@ -64,6 +65,19 @@ class OkHttpHoverflyClient implements HoverflyClient {
         try {
             final Request.Builder builder = createRequestBuilderWithUrl(SIMULATION_PATH);
             final RequestBody body = createRequestBody(simulation);
+            final Request request = builder.put(body).build();
+            exchange(request);
+        } catch (Exception e) {
+            LOGGER.warn("Failed to set simulation: {}", e.getMessage());
+            throw new HoverflyClientException("Failed to set simulation: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void setSimulation(String simulation) {
+        try {
+            final Request.Builder builder = createRequestBuilderWithUrl(SIMULATION_PATH);
+            final RequestBody body = RequestBody.create(JSON, simulation);
             final Request request = builder.put(body).build();
             exchange(request);
         } catch (Exception e) {

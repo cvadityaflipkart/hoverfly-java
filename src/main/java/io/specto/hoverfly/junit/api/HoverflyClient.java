@@ -20,6 +20,8 @@ public interface HoverflyClient {
 
     void setSimulation(Simulation simulation);
 
+    void setSimulation(String simulation);
+
     Simulation getSimulation();
 
     void deleteSimulation();

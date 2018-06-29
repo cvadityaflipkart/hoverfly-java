@@ -1,6 +1,7 @@
 package io.specto.hoverfly.junit.api;
 
 
+import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -126,22 +127,22 @@ public class OkHttpHoverflyClientTest {
 
     @Test
     public void shouldBeAbleToSetV1Simulation() throws Exception {
-        URL resource = Resources.getResource("simulations/v1-simulation.json");
-        Simulation simulation = objectMapper.readValue(resource, Simulation.class);
-        client.setSimulation(simulation);
-
-        Simulation exportedSimulation = hoverfly.getSimulation();
-        assertThat(exportedSimulation.getHoverflyData()).isEqualTo(simulation.getHoverflyData());
+        assertSimulationIsSetAndUpgraded("simulations/v1-simulation.json");
     }
 
     @Test
     public void shouldBeAbleToSetV2Simulation() throws Exception {
-        URL resource = Resources.getResource("simulations/v2-simulation.json");
-        Simulation simulation = objectMapper.readValue(resource, Simulation.class);
-        client.setSimulation(simulation);
+        assertSimulationIsSetAndUpgraded("simulations/v2-simulation.json");
+    }
 
-        Simulation exportedSimulation = hoverfly.getSimulation();
-        assertThat(exportedSimulation.getHoverflyData()).isEqualTo(simulation.getHoverflyData());
+    @Test
+    public void shouldBeAbleToSetV3Simulation() throws Exception {
+        assertSimulationIsSetAndUpgraded("simulations/v3-simulation.json");
+    }
+
+    @Test
+    public void shouldBeAbleToSetV4Simulation() throws Exception {
+        assertSimulationIsSetAndUpgraded("simulations/v4-simulation.json");
     }
 
     @Test
@@ -153,7 +154,7 @@ public class OkHttpHoverflyClientTest {
 
     @Test
     public void shouldBeAbleToDeleteAllSimulation() throws Exception {
-        URL resource = Resources.getResource("simulations/v2-simulation.json");
+        URL resource = Resources.getResource("simulations/v5-simulation.json");
         Simulation simulation = objectMapper.readValue(resource, Simulation.class);
         client.setSimulation(simulation);
 
@@ -256,5 +257,15 @@ public class OkHttpHoverflyClientTest {
     private void startDefaultHoverfly() {
         hoverfly = new Hoverfly(SIMULATE);
         hoverfly.start();
+    }
+
+    private void assertSimulationIsSetAndUpgraded(String resourcePath) throws IOException {
+        URL resource = Resources.getResource(resourcePath);
+        String simulation = Resources.toString(resource, Charset.defaultCharset());
+        client.setSimulation(simulation);
+
+        Simulation exportedSimulation = hoverfly.getSimulation();
+        assertThat(exportedSimulation.getHoverflyData().getPairs()).hasSize(1);
+        assertThat(exportedSimulation.getHoverflyMetaData().getSchemaVersion()).isEqualTo("v5");
     }
 }
