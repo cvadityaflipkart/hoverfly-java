@@ -1,7 +1,7 @@
 package io.specto.hoverfly.junit.dsl.matchers;
 
 
-import io.specto.hoverfly.junit.core.model.FieldMatcher;
+import io.specto.hoverfly.junit.core.model.RequestFieldMatcher;
 import io.specto.hoverfly.junit.dsl.HoverflyDslException;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -15,60 +15,59 @@ public class HoverflyMatchersTest {
     @Test
     public void matchesShouldCreateGlobMatcher() {
 
-        PlainTextFieldMatcher matcher = HoverflyMatchers.matches("fo*o");
+        RequestFieldMatcher matcher = HoverflyMatchers.matches("fo*o");
 
-        assertThat(matcher).isInstanceOf(GlobMatcher.class);
-        assertThat(matcher.getPattern()).isEqualTo("fo*o");
+        assertThat(matcher.getMatcher()).isEqualTo(RequestFieldMatcher.MatcherType.GLOB);
+        assertThat(matcher.getValue()).isEqualTo("fo*o");
     }
 
     @Test
     public void goRegexMatchesShouldCreateRegexMatcher() {
-        PlainTextFieldMatcher matcher = HoverflyMatchers.matchesGoRegex("r([a-z]+)go");
+        RequestFieldMatcher matcher = HoverflyMatchers.matchesGoRegex("r([a-z]+)go");
 
-        assertThat(matcher).isInstanceOf(RegexMatcher.class);
-        assertThat(matcher.getPattern()).isEqualTo("r([a-z]+)go");
+        assertThat(matcher.getMatcher()).isEqualTo(RequestFieldMatcher.MatcherType.REGEX);
+        assertThat(matcher.getValue()).isEqualTo("r([a-z]+)go");
     }
 
     @Test
     public void startsWithShouldCreateRegexMatcher() {
-        PlainTextFieldMatcher matcher = HoverflyMatchers.startsWith("foo");
+        RequestFieldMatcher matcher = HoverflyMatchers.startsWith("foo");
 
-        assertThat(matcher).isInstanceOf(RegexMatcher.class);
-        assertThat(matcher.getPattern()).isEqualTo("^foo.*");
+        assertThat(matcher.getMatcher()).isEqualTo(RequestFieldMatcher.MatcherType.REGEX);
+        assertThat(matcher.getValue()).isEqualTo("^foo.*");
     }
 
 
     @Test
     public void endsWithShouldCreateRegexMatcher() {
-        PlainTextFieldMatcher matcher = HoverflyMatchers.endsWith("foo");
+        RequestFieldMatcher matcher = HoverflyMatchers.endsWith("foo");
 
-        assertThat(matcher).isInstanceOf(RegexMatcher.class);
-        assertThat(matcher.getPattern()).isEqualTo(".*foo$");
+        assertThat(matcher.getMatcher()).isEqualTo(RequestFieldMatcher.MatcherType.REGEX);
+        assertThat(matcher.getValue()).isEqualTo(".*foo$");
     }
 
     @Test
     public void containsShouldCreateRegexMatcher() {
-        PlainTextFieldMatcher matcher = HoverflyMatchers.contains("foo");
+        RequestFieldMatcher matcher = HoverflyMatchers.contains("foo");
 
-        assertThat(matcher).isInstanceOf(RegexMatcher.class);
-        assertThat(matcher.getPattern()).isEqualTo(".*foo.*");
+        assertThat(matcher.getMatcher()).isEqualTo(RequestFieldMatcher.MatcherType.REGEX);
+        assertThat(matcher.getValue()).isEqualTo(".*foo.*");
     }
 
     @Test
     public void anyShouldCreateRegexMatcher() {
-        PlainTextFieldMatcher matcher = HoverflyMatchers.any();
+        RequestFieldMatcher matcher = HoverflyMatchers.any();
 
-        assertThat(matcher).isInstanceOf(RegexMatcher.class);
-        assertThat(matcher.getPattern()).isEqualTo(".*");
+        assertThat(matcher.getMatcher()).isEqualTo(RequestFieldMatcher.MatcherType.REGEX);
+        assertThat(matcher.getValue()).isEqualTo(".*");
     }
 
     @Test
     public void shouldCreateJsonMatcherFromString() {
-        FieldMatcher actual = HoverflyMatchers.equalsToJson("{\"flightId\":\"1\",\"class\":\"PREMIUM\"}").getFieldMatcher();
+        RequestFieldMatcher matcher = HoverflyMatchers.equalsToJson("{\"flightId\":\"1\",\"class\":\"PREMIUM\"}");
 
-        FieldMatcher expected = new FieldMatcher.Builder().jsonMatch("{\"flightId\":\"1\",\"class\":\"PREMIUM\"}").build();
-
-        assertThat(actual).isEqualTo(expected);
+        assertThat(matcher.getMatcher()).isEqualTo(RequestFieldMatcher.MatcherType.JSON);
+        assertThat(matcher.getValue()).isEqualTo("{\"flightId\":\"1\",\"class\":\"PREMIUM\"}");
     }
 
     @Test
@@ -85,21 +84,19 @@ public class HoverflyMatchersTest {
 
         JSONObject object = new JSONObject().put("id", 1);
 
-        FieldMatcher actual = HoverflyMatchers.equalsToJson(object.toString()).getFieldMatcher();
+        RequestFieldMatcher matcher = HoverflyMatchers.equalsToJson(object.toString());
 
-        FieldMatcher expected = new FieldMatcher.Builder().jsonMatch("{\"id\":1}").build();
-
-        assertThat(actual).isEqualTo(expected);
+        assertThat(matcher.getMatcher()).isEqualTo(RequestFieldMatcher.MatcherType.JSON);
+        assertThat(matcher.getValue()).isEqualTo("{\"id\":1}");
 
     }
 
     @Test
     public void shouldCreateXmlMatcherFromString() {
-        FieldMatcher actual = HoverflyMatchers.equalsToXml("<?xml version=\"1.0\" encoding=\"UTF-8\" ?> <flightId>1</flightId> <class>PREMIUM</class>").getFieldMatcher();
+        RequestFieldMatcher matcher = HoverflyMatchers.equalsToXml("<?xml version=\"1.0\" encoding=\"UTF-8\" ?> <flightId>1</flightId> <class>PREMIUM</class>");
 
-        FieldMatcher expected = new FieldMatcher.Builder().xmlMatch("<?xml version=\"1.0\" encoding=\"UTF-8\" ?> <flightId>1</flightId> <class>PREMIUM</class>").build();
-
-        assertThat(actual).isEqualTo(expected);
+        assertThat(matcher.getMatcher()).isEqualTo(RequestFieldMatcher.MatcherType.XML);
+        assertThat(matcher.getValue()).isEqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\" ?> <flightId>1</flightId> <class>PREMIUM</class>");
     }
 
     @Test

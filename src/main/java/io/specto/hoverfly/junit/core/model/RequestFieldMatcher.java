@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import static io.specto.hoverfly.junit.core.model.RequestFieldMatcher.MatcherType.EXACT;
+import static io.specto.hoverfly.junit.core.model.RequestFieldMatcher.MatcherType.REGEX;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RequestFieldMatcher<T> {
@@ -28,7 +31,7 @@ public class RequestFieldMatcher<T> {
     }
 
     public static RequestFieldMatcher newExactMatcher(String value) {
-        return new RequestFieldMatcher<>(MatcherType.EXACT, value);
+        return new RequestFieldMatcher<>(EXACT, value);
     }
 
     public static RequestFieldMatcher newGlobMatcher(String value) {
@@ -36,7 +39,7 @@ public class RequestFieldMatcher<T> {
     }
 
     public static RequestFieldMatcher newRegexMatcher(String value) {
-        return new RequestFieldMatcher<>(MatcherType.REGEX, value);
+        return new RequestFieldMatcher<>(REGEX, value);
     }
 
     public static RequestFieldMatcher newXmlMatcher(String value) {
@@ -54,6 +57,7 @@ public class RequestFieldMatcher<T> {
     public static RequestFieldMatcher newJsonPathMatch(String value) {
         return new RequestFieldMatcher<>(MatcherType.JSONPATH, value);
     }
+
 
     public enum MatcherType {
         EXACT,

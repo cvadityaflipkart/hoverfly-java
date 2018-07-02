@@ -22,13 +22,13 @@ public class RequestMatcherAssert extends AbstractAssert<RequestMatcherAssert, R
 
     public RequestMatcherAssert hasDestinationContainsOneExactMatcher(final String value) {
         isNotNull();
-        assertThat(actual.getBody()).containsExactly(newExactMatcher(value));
+        assertThat(actual.getDestination()).containsExactly(newExactMatcher(value));
         return this;
     }
 
     public RequestMatcherAssert hasPathContainsOneExactMatcher(final String value) {
         isNotNull();
-        assertThat(actual.getBody()).containsExactly(newExactMatcher(value));
+        assertThat(actual.getPath()).containsExactly(newExactMatcher(value));
         return this;
     }
 

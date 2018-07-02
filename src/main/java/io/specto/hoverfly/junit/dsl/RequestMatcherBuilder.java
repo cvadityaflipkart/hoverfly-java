@@ -12,21 +12,16 @@
  */
 package io.specto.hoverfly.junit.dsl;
 
-import io.specto.hoverfly.junit.core.model.FieldMatcher;
 import io.specto.hoverfly.junit.core.model.Request;
+import io.specto.hoverfly.junit.core.model.RequestFieldMatcher;
 import io.specto.hoverfly.junit.core.model.RequestResponsePair;
-import io.specto.hoverfly.junit.dsl.matchers.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.specto.hoverfly.junit.core.model.FieldMatcher.*;
+import static io.specto.hoverfly.junit.core.model.RequestFieldMatcher.newExactMatcher;
 import static io.specto.hoverfly.junit.dsl.matchers.HoverflyMatchers.any;
-import static io.specto.hoverfly.junit.dsl.matchers.HoverflyMatchers.equalsTo;
-import static io.specto.hoverfly.junit.dsl.matchers.RequestMatcherType.GLOB_MATCH;
-import static io.specto.hoverfly.junit.dsl.matchers.RequestMatcherType.REGEX_MATCH;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 
 /**
  * A builder for {@link Request}
@@ -34,29 +29,26 @@ import static java.util.Collections.emptyMap;
 public class RequestMatcherBuilder {
 
     private StubServiceBuilder invoker;
-    private final FieldMatcher method;
-    private final FieldMatcher scheme;
-    private final FieldMatcher destination;
-    private final FieldMatcher path;
-    private final List<String> exactMatchQueries = new ArrayList<>();
-    private final List<String> globMatchQueries = new ArrayList<>();
-    private final List<String> regexMatchQueries = new ArrayList<>();
-    private final Map<String, List<String>> headers = new HashMap<>();
+    private final List<RequestFieldMatcher> method;
+    private final List<RequestFieldMatcher> scheme;
+    private final List<RequestFieldMatcher> destination;
+    private final List<RequestFieldMatcher> path;
+    private final Map<String, List<RequestFieldMatcher>> headers = new HashMap<>();
     private final Map<String, String> requiresState = new HashMap<>();
-    private FieldMatcher query = blankMatcher();
-    private FieldMatcher body = blankMatcher();
+    private Map<String, List<RequestFieldMatcher>> query = new HashMap<>();
+    private List<RequestFieldMatcher> body = singletonList(newExactMatcher("")); // default to match on empty body
 
 
     RequestMatcherBuilder(final StubServiceBuilder invoker,
                           final StubServiceBuilder.HttpMethod method,
-                          final FieldMatcher scheme,
-                          final FieldMatcher destination,
-                          final PlainTextFieldMatcher path) {
+                          final List<RequestFieldMatcher> scheme,
+                          final List<RequestFieldMatcher> destination,
+                          final List<RequestFieldMatcher> path) {
         this.invoker = invoker;
-        this.method = method.getFieldMatcher();
+        this.method = method.getRequestFieldMatcher();
         this.scheme = scheme;
         this.destination = destination;
-        this.path = path.getFieldMatcher();
+        this.path = path;
     }
 
     /**
@@ -65,7 +57,7 @@ public class RequestMatcherBuilder {
      * @return the {@link RequestMatcherBuilder} for further customizations
      */
     public RequestMatcherBuilder body(final String body) {
-        this.body = exactlyMatches(body);
+        this.body = singletonList(newExactMatcher(body));
         return this;
     }
 
@@ -75,12 +67,12 @@ public class RequestMatcherBuilder {
      * @return the {@link RequestMatcherBuilder} for further customizations
      */
     public RequestMatcherBuilder body(HttpBodyConverter httpBodyConverter) {
-        this.body = exactlyMatches(httpBodyConverter.body());
+        this.body = singletonList(newExactMatcher(httpBodyConverter.body()));
         return this;
     }
 
     public RequestMatcherBuilder body(RequestFieldMatcher matcher) {
-        this.body = matcher.getFieldMatcher();
+        this.body = singletonList(matcher);
         return this;
     }
 
@@ -96,7 +88,7 @@ public class RequestMatcherBuilder {
      * @return the {@link RequestMatcherBuilder} for further customizations
      */
     public RequestMatcherBuilder header(final String key, final String value) {
-        headers.put(key, Collections.singletonList(value));
+        headers.put(key, singletonList(newExactMatcher(value)));
         return this;
     }
 
@@ -119,33 +111,18 @@ public class RequestMatcherBuilder {
      */
     public RequestMatcherBuilder queryParam(final String key, final Object... values) {
         if (values.length == 0 ) {
-            return queryParam(HoverflyMatchers.equalsTo(key), any());
-        }
-
-        for(Object value : values) {
-            exactMatchQueries.add(String.format("%s=%s", key, value));
+            query.put(key, singletonList(any()));
+        } else {
+            // TODO until we implement an array matcher, hoverfly currently match on array values that are joined by semicolon
+            query.put(key, singletonList(newExactMatcher(Arrays.stream(values)
+                    .map(Object::toString)
+                    .collect(Collectors.joining(";")))));
         }
         return this;
     }
 
-    public RequestMatcherBuilder queryParam(final String key, final PlainTextFieldMatcher value) {
-        return queryParam(equalsTo(key), value);
-    }
-
-    public RequestMatcherBuilder queryParam(final PlainTextFieldMatcher key, final String value) {
-        return queryParam(key, equalsTo(value));
-    }
-
-
-    public RequestMatcherBuilder queryParam(final PlainTextFieldMatcher key, final PlainTextFieldMatcher value) {
-
-        // TODO should throw exception if both regex and glob matchers are used here
-        String queryParams = String.format("%s=%s", key.getPattern(), value.getPattern());
-        if (key.getType() == GLOB_MATCH || value.getType() == GLOB_MATCH) {
-            globMatchQueries.add(queryParams);
-        } else if (key.getType() == REGEX_MATCH || value.getType() == REGEX_MATCH) {
-            regexMatchQueries.add(queryParams);
-        }
+    public RequestMatcherBuilder queryParam(final String key, final RequestFieldMatcher value) {
+        query.put(key, singletonList(value));
         return this;
     }
 
@@ -169,34 +146,8 @@ public class RequestMatcherBuilder {
 
     public Request build() {
 
-        // Only create query matchers if it is not ignored (set to null)
-        if (query != null) {
-            query = buildQuery();
-        }
-
         // TODO upgrade, as it has builder, the constructor should probably private
-//        return new Request(path, method, destination, scheme, query, body, headers, requiresState);
-        return new Request(emptyList(), emptyList(), emptyList(), emptyList(), emptyMap(), emptyList(), emptyMap(), emptyMap());
-    }
-
-    private FieldMatcher buildQuery() {
-        Builder builder = new Builder();
-        if (globMatchQueries.isEmpty() && regexMatchQueries.isEmpty()) {
-            builder.exactMatch(exactMatchQueries.stream().collect(Collectors.joining("&")));
-        } else {
-            if (!globMatchQueries.isEmpty()) {
-
-                globMatchQueries.addAll(exactMatchQueries);
-                builder.globMatch(globMatchQueries.stream().collect(Collectors.joining("&")));
-            }
-
-            if (!regexMatchQueries.isEmpty()) {
-                regexMatchQueries.addAll(exactMatchQueries);
-                builder.regexMatch(regexMatchQueries.stream().collect(Collectors.joining("&")));
-            }
-        }
-
-        return builder.build();
+        return new Request(path, method, destination, scheme, query, body, headers, requiresState);
     }
 
 }

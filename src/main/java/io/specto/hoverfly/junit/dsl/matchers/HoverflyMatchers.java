@@ -2,7 +2,7 @@ package io.specto.hoverfly.junit.dsl.matchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import io.specto.hoverfly.junit.core.model.FieldMatcher;
+import io.specto.hoverfly.junit.core.model.RequestFieldMatcher;
 import io.specto.hoverfly.junit.dsl.HoverflyDslException;
 import io.specto.hoverfly.junit.dsl.HttpBodyConverter;
 
@@ -18,10 +18,10 @@ public class HoverflyMatchers {
     /**
      * Create a matcher that exactly equals to the String value of the given object
      * @param value the value to match on
-     * @return an {@link ExactMatcher}
+     * @return an {@link RequestFieldMatcher}
      */
-    public static PlainTextFieldMatcher equalsTo(Object value) {
-        return ExactMatcher.newInstance(value);
+    public static RequestFieldMatcher equalsTo(Object value) {
+        return RequestFieldMatcher.newExactMatcher(value.toString());
     }
 
     /**
@@ -29,10 +29,10 @@ public class HoverflyMatchers {
      * For example:
      * <pre>HoverflyMatchers.matches("api-v*.test-svc.*")</pre>
      * @param value the GLOB pattern, use the wildcard character '*' to match any characters
-     * @return an {@link GlobMatcher}
+     * @return an {@link RequestFieldMatcher}
      */
-    public static PlainTextFieldMatcher matches(String value) {
-        return GlobMatcher.newInstance(value);
+    public static RequestFieldMatcher matches(String value) {
+        return RequestFieldMatcher.newGlobMatcher(value);
     }
 
     /**
@@ -42,45 +42,45 @@ public class HoverflyMatchers {
      * Although there are some variations from the Java regex, majority of the syntax is similar.
      * @see <a href="https://regex-golang.appspot.com/assets/html/index.html">Golang regex quick reference</a>
      * @param regexPattern the Golang regex pattern
-     * @return an {@link RegexMatcher}
+     * @return an {@link RequestFieldMatcher}
      */
-    public static PlainTextFieldMatcher matchesGoRegex(String regexPattern) {
-        return RegexMatcher.newInstance(regexPattern);
+    public static RequestFieldMatcher matchesGoRegex(String regexPattern) {
+        return RequestFieldMatcher.newRegexMatcher(regexPattern);
     }
 
     /**
      * Create a matcher that matches on a string prefixed with the given value
      * @param value the value to start with
-     * @return an {@link RegexMatcher}
+     * @return an {@link RequestFieldMatcher}
      */
-    public static PlainTextFieldMatcher startsWith(String value) {
-        return RegexMatcher.newInstance(String.format("^%s.*", value));
+    public static RequestFieldMatcher startsWith(String value) {
+        return RequestFieldMatcher.newRegexMatcher(String.format("^%s.*", value));
     }
 
     /**
      * Create a matcher that matches on a string post-fixed with the given value
      * @param value the value to end with
-     * @return an {@link RegexMatcher}
+     * @return an {@link RequestFieldMatcher}
      */
-    public static PlainTextFieldMatcher endsWith(String value) {
-        return RegexMatcher.newInstance(String.format(".*%s$", value));
+    public static RequestFieldMatcher endsWith(String value) {
+        return RequestFieldMatcher.newRegexMatcher(String.format(".*%s$", value));
     }
 
     /**
      * Create a matcher that matches on a string containing the given value
      * @param value the value to contain
-     * @return an {@link RegexMatcher}
+     * @return an {@link RequestFieldMatcher}
      */
-    public static PlainTextFieldMatcher contains(String value) {
-        return RegexMatcher.newInstance(String.format(".*%s.*", value));
+    public static RequestFieldMatcher contains(String value) {
+        return RequestFieldMatcher.newRegexMatcher(String.format(".*%s.*", value));
     }
 
     /**
      * Create a matcher that matches on any value
-     * @return an {@link RegexMatcher}
+     * @return an {@link RequestFieldMatcher}
      */
-    public static PlainTextFieldMatcher any() {
-        return RegexMatcher.newInstance(".*");
+    public static RequestFieldMatcher any() {
+        return RequestFieldMatcher.newRegexMatcher(".*");
     }
 
     /**
@@ -90,7 +90,7 @@ public class HoverflyMatchers {
      */
     public static RequestFieldMatcher equalsToJson(String value) {
         validateJson(value);
-        return () -> new FieldMatcher.Builder().jsonMatch(value).build();
+        return RequestFieldMatcher.newJsonMatcher(value);
     }
 
     /**
@@ -108,7 +108,7 @@ public class HoverflyMatchers {
      * @return an {@link RequestFieldMatcher} that includes jsonPathMatch
      */
     public static RequestFieldMatcher matchesJsonPath(String expression) {
-        return () -> new FieldMatcher.Builder().jsonPathMatch(expression).build();
+        return RequestFieldMatcher.newJsonPathMatch(expression);
     }
 
     /**
@@ -118,7 +118,7 @@ public class HoverflyMatchers {
      */
     public static RequestFieldMatcher equalsToXml(String value) {
         validateXml(value);
-        return () -> new FieldMatcher.Builder().xmlMatch(value).build();
+        return RequestFieldMatcher.newXmlMatcher(value);
     }
 
     /**
@@ -136,7 +136,7 @@ public class HoverflyMatchers {
      * @return an {@link RequestFieldMatcher} that includes xpathMatch
      */
     public static RequestFieldMatcher matchesXPath(String expression) {
-        return () -> new FieldMatcher.Builder().xpathMatch(expression).build();
+        return RequestFieldMatcher.newXpathMatcher(expression);
     }
 
 

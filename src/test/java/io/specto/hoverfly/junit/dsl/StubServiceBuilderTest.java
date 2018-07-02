@@ -3,6 +3,7 @@ package io.specto.hoverfly.junit.dsl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Iterables;
+import io.specto.hoverfly.junit.core.model.Request;
 import io.specto.hoverfly.junit.core.model.RequestFieldMatcher;
 import io.specto.hoverfly.junit.core.model.RequestResponsePair;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -306,8 +307,8 @@ public class StubServiceBuilderTest {
 
         // Then
         assertThat(pairs).hasSize(1);
-        List<RequestFieldMatcher> body = Iterables.getLast(pairs).getRequest().getBody();
-        assertThat(body).isEmpty();
+        Request request = Iterables.getLast(pairs).getRequest();
+        assertThat(request).hasBodyContainsOneExactMatcher("");
     }
 
     @Test
@@ -434,7 +435,7 @@ public class StubServiceBuilderTest {
         final Set<RequestResponsePair> pairs = builder.willReturn(response()).getRequestResponsePairs();
 
         assertThat(pairs).hasSize(1);
-        assertThat(Iterables.getLast(pairs).getRequest().getPath()).containsExactly(newExactMatcher(globValue));
+        assertThat(Iterables.getLast(pairs).getRequest().getPath()).containsExactly(newGlobMatcher(globValue));
     }
 
     public static final class SomeJson {

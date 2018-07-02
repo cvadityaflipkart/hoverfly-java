@@ -89,7 +89,7 @@ public class HoverflyDslTest {
         // When
         URI uri = UriComponentsBuilder.fromHttpUrl("http://www.other-anotherservice.com")
                 .path("/api/bookings")
-                .queryParam("class", "premium", "business")
+                .queryParam("class", "business", "premium")
                 .queryParam("destination", "new york")
                 .build()
                 .toUri();
