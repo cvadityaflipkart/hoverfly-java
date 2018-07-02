@@ -118,7 +118,7 @@ public class StubServiceBuilderTest {
         assertThat(query).containsExactly(MapEntry.entry("foo", Collections.singletonList(newExactMatcher("bar"))));
     }
 
-    // TODO upgrade
+    // TODO Not supported
 //    @Test
 //    public void shouldBuildQueryMatcherWithFuzzyKey() {
 //        // When
@@ -145,7 +145,7 @@ public class StubServiceBuilderTest {
     }
 
 
-    // TODO upgrade
+    // TODO Not supported
 //    @Test
 //    public void shouldBuildQueryMatcherWithFuzzyKeyAndValue() {
 //        // When
@@ -176,23 +176,20 @@ public class StubServiceBuilderTest {
         );
     }
 
-    // TODO upgrade
-//    @Test
-//    public void shouldBuildExactQueryForKeyWithMultipleValues() {
-//        // When
-//        final Set<RequestResponsePair> pairs = service("www.base-url.com").get("/")
-//                .queryParam("category", "food", "drink")
-//                .willReturn(response()).getRequestResponsePairs();
-//
-//        // Then
-//        assertThat(pairs).hasSize(1);
-//        Map<String, List<RequestFieldMatcher>> query = Iterables.getLast(pairs).getRequest().getQuery();
-//        assertThat(query).containsOnly(
-//                MapEntry.entry("page", Collections.singletonList(newExactMatcher("1"))),
-//                MapEntry.entry("size", Collections.singletonList(newExactMatcher("10")))
-//        );
-//        assertThat(query.getExactMatch()).isEqualTo("category=food&category=drink");
-//    }
+    @Test
+    public void shouldBuildExactQueryForKeyWithMultipleValues() {
+        // When
+        final Set<RequestResponsePair> pairs = service("www.base-url.com").get("/")
+                .queryParam("category", "food", "drink")
+                .willReturn(response()).getRequestResponsePairs();
+
+        // Then
+        assertThat(pairs).hasSize(1);
+        Map<String, List<RequestFieldMatcher>> query = Iterables.getLast(pairs).getRequest().getQuery();
+        assertThat(query).containsExactly(
+                MapEntry.entry("category", Collections.singletonList(newExactMatcher("food;drink")))
+        );
+    }
 
     @Test
     public void shouldBuildQueryWithMultipleFuzzyMatchers() {

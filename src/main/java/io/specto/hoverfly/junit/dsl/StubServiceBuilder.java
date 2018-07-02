@@ -201,20 +201,6 @@ public class StubServiceBuilder {
     }
 
     /**
-     * Used to create url pattens of {@link DelaySettings}.
-     *
-     * @return service destination
-     */
-    String getDestination() {
-        return this.destination.stream().filter(m -> m.getMatcher() == MatcherType.EXACT || m.getMatcher() == MatcherType.REGEX)
-                .findFirst()
-                .map(RequestFieldMatcher::getValue)
-                .map(Object::toString)
-                .orElseThrow(() -> new IllegalStateException("None of the exact/regex matcher is set. "));
-
-    }
-
-    /**
      * Adds service wide delay settings.
      *
      * @param delay         amount of delay

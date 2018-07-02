@@ -128,7 +128,6 @@ public class HoverflyRule extends ExternalResource {
         }
     }
 
-    // TODO default path?
     public static HoverflyRule inCaptureMode() {
         return inCaptureMode(localConfigs());
     }

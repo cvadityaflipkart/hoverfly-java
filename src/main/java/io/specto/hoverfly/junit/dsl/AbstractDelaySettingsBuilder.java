@@ -1,5 +1,9 @@
 package io.specto.hoverfly.junit.dsl;
 
+import io.specto.hoverfly.junit.core.model.DelaySettings;
+import io.specto.hoverfly.junit.core.model.RequestFieldMatcher;
+
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class AbstractDelaySettingsBuilder {
@@ -12,8 +16,17 @@ public class AbstractDelaySettingsBuilder {
         this.delayTimeUnit = delayTimeUnit;
     }
 
-    protected String toPattern(String value) {
-        return value;
+    /**
+     * Convert RequestFieldMatcher list to url pattens of {@link DelaySettings}.
+     *
+     * @return URL patterns as string
+     */
+    protected String toPattern(List<RequestFieldMatcher> matchers) {
+        return matchers.stream().filter(m -> m.getMatcher() == RequestFieldMatcher.MatcherType.EXACT || m.getMatcher() == RequestFieldMatcher.MatcherType.REGEX)
+                .findFirst()
+                .map(RequestFieldMatcher::getValue)
+                .map(Object::toString)
+                .orElseThrow(() -> new IllegalStateException("None of the exact/regex matcher is set. "));
     }
 
     protected int getConvertedDelay() {

@@ -15,16 +15,14 @@ public class StubServiceDelaySettingsBuilder extends AbstractDelaySettingsBuilde
 
     public StubServiceBuilder forAll() {
         if (isValid()) {
-            String destination = invoker.getDestination();
-            invoker.addDelaySetting(new DelaySettings(toPattern(destination), getConvertedDelay(), null));
+            invoker.addDelaySetting(new DelaySettings(toPattern(invoker.destination), getConvertedDelay(), null));
         }
         return invoker;
     }
 
     public StubServiceBuilder forMethod(String method) {
         if (isValid()) {
-            String destination = invoker.getDestination();
-            invoker.addDelaySetting(new DelaySettings(toPattern(destination), getConvertedDelay(), method));
+            invoker.addDelaySetting(new DelaySettings(toPattern(invoker.destination), getConvertedDelay(), method));
         }
         return invoker;
     }

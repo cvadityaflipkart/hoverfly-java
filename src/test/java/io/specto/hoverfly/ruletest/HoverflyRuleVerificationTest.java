@@ -111,25 +111,36 @@ public class HoverflyRuleVerificationTest {
        assertThatThrownBy(() -> hoverflyRule.verifyAll())
                .isInstanceOf(HoverflyVerificationError.class)
                .hasMessageContaining("Expected at least 1 request:\n" +
-               "{\n" +
-               "  \"path\" : {\n" +
-               "    \"exactMatch\" : \"/api/bookings/1\"\n" +
-               "  },\n" +
-               "  \"method\" : {\n" +
-               "    \"exactMatch\" : \"PUT\"\n" +
-               "  },\n" +
-               "  \"destination\" : {\n" +
-               "    \"globMatch\" : \"api*.flight.com\"\n" +
-               "  },\n" +
-               "  \"query\" : {\n" +
-               "    \"exactMatch\" : \"\"\n" +
-               "  },\n" +
-               "  \"body\" : {\n" +
-               "    \"jsonMatch\" : \"{\\\"id\\\":1,\\\"origin\\\":\\\"London\\\",\\\"destination\\\":\\\"Hong Kong\\\",\\\"date\\\":\\\"2017-06-29\\\"}\"\n" +
-               "  }\n" +
-               "}\n" +
-               "\n" +
-               "But actual number of requests is 0.");
+                       "{\n" +
+                       "  \"path\" : [ {\n" +
+                       "    \"matcher\" : \"exact\",\n" +
+                       "    \"value\" : \"/api/bookings\"\n" +
+                       "  } ],\n" +
+                       "  \"method\" : [ {\n" +
+                       "    \"matcher\" : \"exact\",\n" +
+                       "    \"value\" : \"GET\"\n" +
+                       "  } ],\n" +
+                       "  \"destination\" : [ {\n" +
+                       "    \"matcher\" : \"glob\",\n" +
+                       "    \"value\" : \"api*.flight.com\"\n" +
+                       "  } ],\n" +
+                       "  \"query\" : {\n" +
+                       "    \"airline\" : [ {\n" +
+                       "      \"matcher\" : \"regex\",\n" +
+                       "      \"value\" : \".*Pacific.*\"\n" +
+                       "    } ],\n" +
+                       "    \"page\" : [ {\n" +
+                       "      \"matcher\" : \"regex\",\n" +
+                       "      \"value\" : \".*\"\n" +
+                       "    } ]\n" +
+                       "  },\n" +
+                       "  \"body\" : [ {\n" +
+                       "    \"matcher\" : \"exact\",\n" +
+                       "    \"value\" : \"\"\n" +
+                       "  } ]\n" +
+                       "}\n" +
+                       "\n" +
+                       "But actual number of requests is 0.");
     }
 
     private ResponseEntity<SimpleBooking> getBookings() {
