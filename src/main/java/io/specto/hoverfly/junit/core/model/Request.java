@@ -39,6 +39,8 @@ public class Request {
 
     private final Map<String, List<RequestFieldMatcher>> query;
 
+    private final List<RequestFieldMatcher> deprecatedQuery;
+
     private final List<RequestFieldMatcher> body;
 
     private final Map<String, List<RequestFieldMatcher>> headers;
@@ -47,18 +49,20 @@ public class Request {
 
     @JsonCreator
     public Request(@JsonProperty("path") List<RequestFieldMatcher> path,
-                     @JsonProperty("method") List<RequestFieldMatcher> method,
-                     @JsonProperty("destination") List<RequestFieldMatcher> destination,
-                     @JsonProperty("scheme") List<RequestFieldMatcher> scheme,
-                     @JsonProperty("query") Map<String, List<RequestFieldMatcher>> query,
-                     @JsonProperty("body") List<RequestFieldMatcher> body,
-                     @JsonProperty("headers") Map<String, List<RequestFieldMatcher>> headers,
-                     @JsonProperty("requiresState") Map<String, String> requiresState) {
+                   @JsonProperty("method") List<RequestFieldMatcher> method,
+                   @JsonProperty("destination") List<RequestFieldMatcher> destination,
+                   @JsonProperty("scheme") List<RequestFieldMatcher> scheme,
+                   @JsonProperty("query") Map<String, List<RequestFieldMatcher>> query,
+                   @JsonProperty("deprecatedQuery") List<RequestFieldMatcher> deprecatedQuery,
+                   @JsonProperty("body") List<RequestFieldMatcher> body,
+                   @JsonProperty("headers") Map<String, List<RequestFieldMatcher>> headers,
+                   @JsonProperty("requiresState") Map<String, String> requiresState) {
         this.path = path;
         this.method = method;
         this.destination = destination;
         this.scheme = scheme;
         this.query = query;
+        this.deprecatedQuery = deprecatedQuery;
         this.body = body;
         this.headers = headers;
         this.requiresState = requiresState;
@@ -84,6 +88,10 @@ public class Request {
         return query;
     }
 
+    public List<RequestFieldMatcher> getDeprecatedQuery() {
+        return deprecatedQuery;
+    }
+
     public List<RequestFieldMatcher> getBody() {
         return body;
     }
@@ -104,6 +112,7 @@ public class Request {
         private List<RequestFieldMatcher> scheme;
         private Map<String, List<RequestFieldMatcher>> query;
         private List<RequestFieldMatcher> body;
+        private List<RequestFieldMatcher> deprecatedQuery;
         private Map<String, List<RequestFieldMatcher>> headers;
         private Map<String, String> requiresState;
 
@@ -132,6 +141,11 @@ public class Request {
             return this;
         }
 
+        public Request.Builder deprecatedQuery(List<RequestFieldMatcher> deprecatedQuery) {
+            this.deprecatedQuery = deprecatedQuery;
+            return this;
+        }
+
         public Request.Builder body(List<RequestFieldMatcher> body) {
             this.body = body;
             return this;
@@ -148,7 +162,7 @@ public class Request {
         }
 
         public Request build() {
-            return new Request(path, method, destination, scheme, query, body, headers, requiresState);
+            return new Request(path, method, destination, scheme, query, deprecatedQuery, body, headers, requiresState);
         }
     }
 

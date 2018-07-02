@@ -25,15 +25,14 @@ public class SimulationTest {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     private URL v1Resource = Resources.getResource("simulations/v1-simulation.json");
+    private URL v1ResourceWithLooseMatching = Resources.getResource("simulations/v1-simulation-with-loose-matching.json");
+    private URL v1ResourceWithRecording = Resources.getResource("simulations/v1-simulation-with-recording.json");
     private URL v2Resource = Resources.getResource("simulations/v2-simulation.json");
     private URL v3Resource = Resources.getResource("simulations/v3-simulation.json");
     private URL v4Resource = Resources.getResource("simulations/v4-simulation.json");
     private URL v5Resource = Resources.getResource("simulations/v5-simulation.json");
     private URL v5ResourceWithoutGlobalActions = Resources.getResource("simulations/v5-simulation-without-global-actions.json");
     private URL v5ResourceWithUnknownFields = Resources.getResource("simulations/v5-simulation-with-unknown-fields.json");
-    private URL v1ResourceWithLooseMatching = Resources.getResource("simulations/v1-simulation-with-loose-matching.json");
-    private URL v1ResourceWithRecording = Resources.getResource("simulations/v1-simulation-with-recording.json");
-    private URL v5ResourceWithDeprecatedQuery = Resources.getResource("simulations/v5-simulation-with-deprecated-query.json");
 
 
     @Test
@@ -85,16 +84,9 @@ public class SimulationTest {
     }
 
 
-    private Simulation getLatestSimulationWithoutState() {
-        Request.Builder requestBuilder = getTestRequestBuilder();
-        Response.Builder responseBuilder = getTestResponseBuilder();
-        HoverflyData data = getTestHoverflyData(requestBuilder, responseBuilder);
-        HoverflyMetaData meta = new HoverflyMetaData();
-        return new Simulation(data, meta);
-    }
-
     private Simulation getLatestSimulation() {
         Request.Builder requestBuilder = getTestRequestBuilder()
+                .deprecatedQuery(singletonList(newExactMatcher("")))
                 .requiresState(ImmutableMap.of("requiresStateKey", "requiresStateValue"));
         Response.Builder responseBuilder = getTestResponseBuilder()
                 .transitionsState(ImmutableMap.of("transitionsStateKey", "transitionsStateValue"))
@@ -104,18 +96,6 @@ public class SimulationTest {
         return new Simulation(data, meta);
     }
 
-
-    private Simulation getV3Simulation() {
-        HoverflyData data = getTestHoverflyData(getTestRequestBuilder(), getTestResponseBuilder());
-        HoverflyMetaData meta = new HoverflyMetaData("v3", "", "");
-        return new Simulation(data, meta);
-    }
-
-    private Simulation getV2Simulation() {
-        HoverflyData data = getTestHoverflyData(getTestRequestBuilder(), getTestResponseBuilder());
-        HoverflyMetaData meta = new HoverflyMetaData("v2", "", "");
-        return new Simulation(data, meta);
-    }
 
     private Request.Builder getTestRequestBuilder() {
         return new Request.Builder()
