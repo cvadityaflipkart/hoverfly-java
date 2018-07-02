@@ -1,49 +1,73 @@
 {
-  "data": {
-    "pairs": [
-      {
-        "response": {
-          "status": 200,
-          "body": "{\"bookingId\":\"1\"}",
-          "encodedBody": false,
-          "headers": {
-            "Content-Type": [
-              "application/json"
-            ]
-          }
-        },
-        "request": {
-          "path": {
-            "exactMatch": "/api/bookings/1"
-          },
-          "method": {
-            "exactMatch": "GET"
-          },
-          "destination": {
-            "exactMatch": "www.my-test.com"
-          },
-          "scheme": {
-            "exactMatch": "http"
-          },
-          "query": {
-            "exactMatch": ""
-          },
-          "body": {
-            "exactMatch": ""
-          },
-          "headers": {
-            "Content-Type": [
-              "text/plain; charset=utf-8"
-            ]
-          }
-        }
-      }
-    ],
-    "globalActions": {
-      "delays": []
-    }
-  },
-  "meta": {
-    "schemaVersion": "v2"
-  }
+	"data": {
+		"pairs": [
+			{
+				"request": {
+					"path": [
+						{
+							"matcher": "exact",
+							"value": "/api/bookings/1"
+						}
+					],
+					"method": [
+						{
+							"matcher": "exact",
+							"value": "GET"
+						}
+					],
+					"destination": [
+						{
+							"matcher": "exact",
+							"value": "www.my-test.com"
+						}
+					],
+					"scheme": [
+						{
+							"matcher": "exact",
+							"value": "http"
+						}
+					],
+					"body": [
+						{
+							"matcher": "exact",
+							"value": ""
+						}
+					],
+					"headers": {
+						"Content-Type": [
+							{
+								"matcher": "glob",
+								"value": "text/plain; charset=utf-8"
+							}
+						]
+					},
+					"deprecatedQuery": [
+						{
+							"matcher": "exact",
+							"value": ""
+						}
+					]
+				},
+				"response": {
+					"status": 200,
+					"body": "{\"bookingId\":\"1\"}",
+					"encodedBody": false,
+					"headers": {
+						"Content-Type": [
+							"application/json"
+						]
+					},
+					"templated": false
+				}
+			}
+		],
+		"globalActions": {
+			"delays": []
+		}
+	},
+	"meta": {
+		"schemaVersion": "v5",
+		"hoverflyVersion": "v0.17.1",
+		"timeExported": "2018-07-02T22:18:30+01:00"
+	}
 }
