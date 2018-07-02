@@ -16,14 +16,20 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HoverflyData {
+
+    @JsonDeserialize(as = LinkedHashSet.class)
+    @JsonSerialize(as = LinkedHashSet.class)
     private final Set<RequestResponsePair> pairs;
     private final GlobalActions globalActions;
 

@@ -28,7 +28,7 @@ import static java.util.Collections.singletonList;
  */
 public class StubServiceBuilder {
 
-    private final Set<RequestResponsePair> requestResponsePairs = new HashSet<>();
+    private final Set<RequestResponsePair> requestResponsePairs = new LinkedHashSet<>();
     private final List<DelaySettings> delaySettings = new ArrayList<>();
 
     private static final String SEPARATOR = "://";

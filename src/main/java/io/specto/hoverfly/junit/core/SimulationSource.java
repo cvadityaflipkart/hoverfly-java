@@ -9,8 +9,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static io.specto.hoverfly.junit.core.HoverflyUtils.*;
 import static java.util.stream.Collectors.toList;
@@ -116,7 +118,7 @@ public interface SimulationSource {
             final Set<RequestResponsePair> pairs = Arrays.stream(stubServiceBuilder)
                     .map(StubServiceBuilder::getRequestResponsePairs)
                     .flatMap(Set::stream)
-                    .collect(toSet());
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
 
             final List<DelaySettings> delaySettings = Arrays.stream(stubServiceBuilder)
                     .map(StubServiceBuilder::getDelaySettings)
