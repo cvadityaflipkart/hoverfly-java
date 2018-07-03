@@ -11,12 +11,18 @@ public class ModeArguments {
 
     private List<String> headersWhitelist;
     private String matchingStrategy;
+    private boolean stateful;
 
     public ModeArguments() {
     }
 
     public ModeArguments(List<String> headersWhitelist) {
         this.headersWhitelist = headersWhitelist;
+    }
+
+    public ModeArguments(List<String> headersWhitelist, boolean stateful) {
+        this.headersWhitelist = headersWhitelist;
+        this.stateful = stateful;
     }
 
     public List<String> getHeadersWhitelist() {
@@ -34,5 +40,13 @@ public class ModeArguments {
 
     public void setMatchingStrategy(String matchingStrategy) {
         this.matchingStrategy = matchingStrategy;
+    }
+
+    public boolean isStateful() {
+        return stateful;
+    }
+
+    public void setStateful(boolean stateful) {
+        this.stateful = stateful;
     }
 }

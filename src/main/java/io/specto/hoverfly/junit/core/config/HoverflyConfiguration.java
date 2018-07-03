@@ -34,6 +34,7 @@ public class HoverflyConfiguration {
     private boolean plainHttpTunneling;
     private String upstreamProxy;
     private Optional<Logger> hoverflyLogger;
+    private boolean statefulCapture;
 
     /**
      * Create configurations for external hoverfly
@@ -48,8 +49,9 @@ public class HoverflyConfiguration {
                           final String authToken,
                           final String adminCertificate,
                           final List<String> captureHeaders,
-                          final boolean webServer) {
-        this(proxyPort, adminPort, proxyLocalHost, destination, proxyCaCertificate, captureHeaders, webServer, Optional.empty());
+                          final boolean webServer,
+                          final boolean statefulCapture) {
+        this(proxyPort, adminPort, proxyLocalHost, destination, proxyCaCertificate, captureHeaders, webServer, Optional.empty(), statefulCapture);
         setScheme(scheme);
         setHost(host);
         this.authToken = authToken;
@@ -67,7 +69,9 @@ public class HoverflyConfiguration {
                           final String proxyCaCertificate,
                           final List<String> captureHeaders,
                           final boolean webServer,
-                          final Optional<Logger> hoverflyLogger) {
+                          final Optional<Logger> hoverflyLogger,
+                          final boolean statefulCapture
+    ) {
         this.proxyPort = proxyPort;
         this.adminPort = adminPort;
         this.proxyLocalHost = proxyLocalHost;
@@ -76,6 +80,7 @@ public class HoverflyConfiguration {
         this.captureHeaders = captureHeaders;
         this.webServer = webServer;
         this.hoverflyLogger = hoverflyLogger;
+        this.statefulCapture = statefulCapture;
     }
 
     /**
@@ -225,6 +230,10 @@ public class HoverflyConfiguration {
 
     public Optional<Logger> getHoverflyLogger() {
         return hoverflyLogger;
+    }
+
+    public boolean isStatefulCapture() {
+        return statefulCapture;
     }
 
     private boolean isNotBlank(String str) {

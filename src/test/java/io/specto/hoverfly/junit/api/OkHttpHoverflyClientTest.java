@@ -120,11 +120,15 @@ public class OkHttpHoverflyClientTest {
 
     @Test
     public void shouldBeAbleToSetCaptureModeWithArguments() {
-        client.setMode(CAPTURE, new ModeArguments(Lists.newArrayList("Content-Type", "Authorization")));
+        ModeArguments modeArguments = new ModeArguments(Lists.newArrayList("Content-Type", "Authorization"), true);
+        client.setMode(CAPTURE, modeArguments);
 
-        List<String> headersWhitelist = hoverfly.getHoverflyInfo().getModeArguments().getHeadersWhitelist();
+        ModeArguments actual = hoverfly.getHoverflyInfo().getModeArguments();
+        List<String> headersWhitelist = actual.getHeadersWhitelist();
         assertThat(headersWhitelist).hasSize(2);
         assertThat(headersWhitelist).containsOnly("Content-Type", "Authorization");
+
+        assertThat(actual.isStateful()).isTrue();
     }
 
     @Test

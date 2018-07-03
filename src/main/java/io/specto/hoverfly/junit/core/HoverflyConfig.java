@@ -32,6 +32,7 @@ public abstract class HoverflyConfig {
     protected String proxyCaCert;
     protected List<String> captureHeaders;
     protected boolean webServer;
+    protected boolean statefulCapture;
 
     /**
      * New instance
@@ -130,6 +131,16 @@ public abstract class HoverflyConfig {
      */
     public HoverflyConfig captureAllHeaders() {
         this.captureHeaders = Collections.singletonList("*");
+        return this;
+    }
+
+
+    /**
+     * By default Hoverfly only capture multiple identical requests once, enable to capture all requests sequentially
+     * @return the {@link HoverflyConfig} for further customizations
+     */
+    public HoverflyConfig enableStatefulCapture() {
+        this.statefulCapture = true;
         return this;
     }
 

@@ -442,6 +442,39 @@ public class HoverflyTest {
     }
 
     @Test
+    public void shouldSetModeArgumentsForCaptureMode() {
+        hoverfly = new Hoverfly(localConfigs().captureAllHeaders().enableStatefulCapture(), CAPTURE);
+
+        HoverflyClient hoverflyClient = createMockHoverflyClient(hoverfly);
+        when(hoverflyClient.getHealth()).thenReturn(true);
+
+        hoverfly.start();
+
+        final ArgumentCaptor<ModeArguments> arguments = ArgumentCaptor.forClass(ModeArguments.class);
+        verify(hoverflyClient).setMode(eq(HoverflyMode.CAPTURE), arguments.capture());
+
+        assertThat(arguments.getValue().isStateful()).isTrue();
+        assertThat(arguments.getValue().getHeadersWhitelist()).containsOnly("*");
+    }
+
+    @Test
+    public void shouldResetModeWithModeArguments() {
+        hoverfly = new Hoverfly(localConfigs().captureAllHeaders().enableStatefulCapture(), CAPTURE);
+
+        HoverflyClient hoverflyClient = createMockHoverflyClient(hoverfly);
+
+        hoverfly.resetMode(CAPTURE);
+
+        final ArgumentCaptor<ModeArguments> arguments = ArgumentCaptor.forClass(ModeArguments.class);
+        verify(hoverflyClient).setMode(eq(HoverflyMode.CAPTURE), arguments.capture());
+
+        assertThat(arguments.getValue().isStateful()).isTrue();
+        assertThat(arguments.getValue().getHeadersWhitelist()).containsOnly("*");
+    }
+
+
+
+    @Test
     public void shouldSetUpstreamProxy() {
         hoverfly = new Hoverfly(localConfigs().upstreamProxy(new InetSocketAddress("127.0.0.1", 8900)), SIMULATE);
 

@@ -34,6 +34,7 @@ public class HoverflyConfigTest {
         assertThat(configs.isPlainHttpTunneling()).isFalse();
         assertThat(configs.isWebServer()).isFalse();
         assertThat(configs.isTlsVerificationDisabled()).isFalse();
+        assertThat(configs.isStatefulCapture()).isFalse();
     }
 
     @Test
@@ -155,5 +156,12 @@ public class HoverflyConfigTest {
         HoverflyConfiguration configs = localConfigs().upstreamProxy(new InetSocketAddress("127.0.0.1", 8900)).build();
 
         assertThat(configs.getUpstreamProxy()).isEqualTo("127.0.0.1:8900");
+    }
+
+    @Test
+    public void shouldEnableStatefulCapture() {
+        HoverflyConfiguration configs = localConfigs().enableStatefulCapture().build();
+
+        assertThat(configs.isStatefulCapture()).isTrue();
     }
 }

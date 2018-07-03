@@ -35,6 +35,7 @@ class HoverflyConfigTest {
             assertThat(configs.getSslKeyPath()).isEmpty();
             assertThat(configs.getHost()).isEqualTo("localhost");
             assertThat(configs.getScheme()).isEqualTo("http");
+            assertThat(configs.isStatefulCapture()).isFalse();
         }
     }
 
@@ -42,7 +43,7 @@ class HoverflyConfigTest {
     @HoverflyCore(mode = HoverflyMode.SIMULATE, config = @HoverflyConfig(
             proxyLocalHost = true, destination = "hoverfly.io", captureHeaders = {"Content-Type"},
             plainHttpTunneling = true, disableTlsVerification = true, upstreamProxy = "localhost:5000",
-            webServer = true
+            webServer = true, statefulCapture = true
     ))
     @ExtendWith(HoverflyExtension.class)
     class CustomizedSettings {
@@ -59,6 +60,7 @@ class HoverflyConfigTest {
             assertThat(configs.getUpstreamProxy()).isEqualTo("localhost:5000");
             assertThat(configs.getHost()).isEqualTo("localhost");
             assertThat(configs.getScheme()).isEqualTo("http");
+            assertThat(configs.isStatefulCapture()).isTrue();
         }
     }
 }

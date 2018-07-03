@@ -142,14 +142,10 @@ public class Hoverfly implements AutoCloseable {
 
         waitForHoverflyToBecomeHealthy();
 
+        setModeWithArguments(hoverflyMode, hoverflyConfig);
+
         if (StringUtils.isNotBlank(hoverflyConfig.getDestination())) {
             setDestination(hoverflyConfig.getDestination());
-        }
-
-        if (hoverflyMode == CAPTURE) {
-            hoverflyClient.setMode(hoverflyMode, new ModeArguments(hoverflyConfig.getCaptureHeaders()));
-        } else {
-            hoverflyClient.setMode(hoverflyMode);
         }
 
         if (hoverflyConfig.getProxyCaCertificate().isPresent()) {
@@ -334,7 +330,7 @@ public class Hoverfly implements AutoCloseable {
             LOGGER.warn("Older version of Hoverfly may not have a update state API", e);
         }
     }
-  
+
     /**
      * Deletes all diffs from Hoverfly
      */
@@ -406,7 +402,7 @@ public class Hoverfly implements AutoCloseable {
      * @param mode Hoverfly mode to reset
      */
     public void resetMode(HoverflyMode mode) {
-        hoverflyClient.setMode(mode, new ModeArguments(hoverflyConfig.getCaptureHeaders()));
+        setModeWithArguments(mode, hoverflyConfig);
     }
 
     /**
@@ -495,6 +491,14 @@ public class Hoverfly implements AutoCloseable {
             }
         }
         throw new IllegalStateException("Hoverfly has not become healthy in " + BOOT_TIMEOUT_SECONDS + " seconds");
+    }
+
+    private void setModeWithArguments(HoverflyMode mode, HoverflyConfiguration config) {
+        if (mode == CAPTURE) {
+            hoverflyClient.setMode(mode, new ModeArguments(config.getCaptureHeaders(), config.isStatefulCapture()));
+        } else {
+            hoverflyClient.setMode(mode);
+        }
     }
 
     private void cleanUp() {

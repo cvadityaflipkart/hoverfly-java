@@ -46,6 +46,11 @@ public @interface HoverflyConfig {
     String[] captureHeaders() default {};
 
     /**
+     * By default Hoverfly only capture multiple identical requests once, enable this flag to capture all requests sequentially
+     */
+    boolean statefulCapture() default false;
+
+    /**
      * Custom SSL certificate for Hoverfly {@link LocalHoverflyConfig#sslCertificatePath(String)}
      */
     String sslCertificatePath() default "";

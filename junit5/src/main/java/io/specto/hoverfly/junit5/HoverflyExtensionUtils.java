@@ -92,5 +92,8 @@ class HoverflyExtensionUtils {
         if (configParams.webServer()) {
             configs.asWebServer();
         }
+        if (configParams.statefulCapture()) {
+            configs.enableStatefulCapture();
+        }
     }
 }
