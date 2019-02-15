@@ -42,18 +42,6 @@ class HoverflyRuleUtils {
         return Paths.get(DEFAULT_HOVERFLY_EXPORT_PATH).resolve(fileName);
     }
 
-    static Optional<Path> findResourceOnClasspath(String resourceName) {
-        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        return Optional.ofNullable(classLoader.getResource(resourceName))
-                .map(url -> {
-                    try {
-                        return Paths.get(url.toURI());
-                    } catch (URISyntaxException e) {
-                        throw new IllegalArgumentException("Resource not found with name: " + resourceName);
-                    }
-                });
-    }
-
     /**
      * Creates src/test/resources/hoverfly directory if it does not exist
      */
