@@ -126,6 +126,25 @@ The input to these config options should be the file path relative to the classp
 If the default SSL certificate is overridden, hoverfly-java will not automatically set it trusted,  and it is the users' responsibility to configure SSL context for their HTTPS client.
 
 
+Simulation Preprocessor
+-----------------------
+
+The ``SimulationPreprocessor`` interface lets you apply custom transformation to the ``Simulation`` object before importing to Hoverfly. This can be useful if you want to batch add/remove
+matchers, or update matcher types, like weakening matching criteria of captured data. Here is an example of adding a glob matcher for all the paths:
+
+.. code-block:: java
+
+    HoverflyConfig configBuilder = new LocalHoverflyConfig().simulationPreprocessor(s ->
+                s.getHoverflyData().getPairs()
+                        .forEach(
+                                p -> p.getRequest().getPath()
+                                        .add(new RequestFieldMatcher<>(RequestFieldMatcher.MatcherType.GLOB, "/preprocessed/*"))
+                        )
+        );
+
+See :ref:`extension` :ref:`extension_config` if you are using JUnit5.
+
+
 Using externally managed instance
 ---------------------------------
 
