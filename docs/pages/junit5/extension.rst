@@ -32,6 +32,8 @@ or perform :ref:`verification`.
 As you can see, injecting Hoverfly into your test gives you a lot of flexibility, and ``HoverflyExtension`` takes care of
 resetting Hoverfly before each test to prevent interference.
 
+.. _extension_config:
+
 Configurations
 --------------
 
@@ -46,6 +48,26 @@ You can override Hoverfly configuration via the ``@HoverflyCore`` annotation, fo
     }
 
 All the existing Hoverfly :ref:`configuration` options are available via the ``@HoverflyConfig`` interface.
+
+To set a `SimulationPreprocessor` for ``@HoverflyConfig``, you can create a static nested class that implements the interface:
+
+.. code-block:: java
+
+    static class CustomSimulationPreprocessor implements SimulationPreprocessor {
+        @Override
+        public void accept(Simulation simulation) {
+            // your transformation goes here
+        }
+    }
+
+Then pass your custom ``SimulationPreprocessor`` class to the ``@HoverflyConfig`` annotation like this:
+
+.. code-block:: java
+
+    @HoverflyCore(mode = HoverflyMode.SIMULATE, config = @HoverflyConfig(
+            simulationPreprocessor = CustomSimulationPreprocessor.class
+    ))
+
 
 Simulate
 --------
