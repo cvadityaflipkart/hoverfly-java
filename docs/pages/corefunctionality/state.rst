@@ -30,6 +30,6 @@ The following state control methods are available:
 
 * ``withState(key, value)`` add a condition for the request to be matched based on the given state (which is a key-value pair)
 * ``andSetState(key, value)`` applies to the response to set the state
-* ``andRemoteState(key)`` can be applied to the response to remove a state by key.
+* ``andRemoveState(key)`` can be applied to the response to remove a state by key.
 
 You can also chain multiple state methods to create more complex scenarios.
