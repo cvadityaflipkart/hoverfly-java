@@ -73,9 +73,7 @@ public class HoverflyDiffTest {
             final Response response = client.newCall(request).execute();
             assertThat(response.code()).isEqualTo(200);
 
-            Throwable thrown = catchThrowable(() -> {
-                hoverfly.assertThatNoDiffIsReported(true);
-            });
+            Throwable thrown = catchThrowable(() -> hoverfly.assertThatNoDiffIsReported(true));
 
             assertThat(thrown).isInstanceOf(AssertionError.class);
         }

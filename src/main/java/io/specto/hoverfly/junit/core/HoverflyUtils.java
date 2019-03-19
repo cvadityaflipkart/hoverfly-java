@@ -36,6 +36,7 @@ class HoverflyUtils {
 
     static void checkPortInUse(int port) {
         try (final ServerSocket ignored = new ServerSocket(port, 1, InetAddress.getLoopbackAddress())) {
+            // Do nothing
         } catch (IOException e) {
             throw new IllegalStateException("Port is already in use: " + port);
         }

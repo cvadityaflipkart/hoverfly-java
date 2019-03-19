@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import io.specto.hoverfly.junit.core.model.*;
 import io.specto.hoverfly.webserver.ImportTestWebServer;
+import org.json.JSONException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.io.IOException;
 import java.net.URL;
@@ -136,8 +138,11 @@ public class SimulationSourceTest {
     }
 
     @Test
-    public void shouldCreateEmptySimulation() {
-        assertThat(SimulationSource.empty().getSimulation());
+    public void shouldCreateEmptySimulation() throws JSONException {
+        JSONAssert.assertEquals(
+                SimulationSource.empty().getSimulation(),
+                "{\"data\":{\"pairs\":[],\"globalActions\":{\"delays\":[]}},\"meta\":{\"schemaVersion\":\"v5\"}}",
+                false);
     }
 
 

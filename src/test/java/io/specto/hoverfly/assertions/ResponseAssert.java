@@ -42,11 +42,8 @@ public class ResponseAssert extends AbstractAssert<ResponseAssert, Response> {
     public ResponseAssert hasExactHeaders(final Header... headers) {
         isNotNull();
 
-        final Set<Header> setOfHeaders = Arrays.stream(headers)
-                .map(h -> Header.header(h.getKey(), h.getValue()))
-                .collect(toSet());
-
-        assertThat(actual.getHeaders()).containsOnly(setOfHeaders.toArray(new Header[setOfHeaders.size()]));
+        assertThat(actual.getHeaders()).containsOnly(Arrays.stream(headers)
+                .map(h -> Header.header(h.getKey(), h.getValue())).distinct().toArray(Header[]::new));
 
         return this;
     }

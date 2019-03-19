@@ -2,7 +2,6 @@ package io.specto.hoverfly.junit5;
 
 import io.specto.hoverfly.junit.core.Hoverfly;
 import io.specto.hoverfly.junit.core.HoverflyMode;
-import io.specto.hoverfly.junit.core.SimulationSource;
 import io.specto.hoverfly.junit.core.model.Simulation;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

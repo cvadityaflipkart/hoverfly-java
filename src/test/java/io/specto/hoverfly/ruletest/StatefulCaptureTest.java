@@ -2,17 +2,14 @@ package io.specto.hoverfly.ruletest;
 
 import com.google.common.collect.ImmutableList;
 import io.specto.hoverfly.junit.core.HoverflyConfig;
-import io.specto.hoverfly.junit.dsl.HttpBodyConverter;
 import io.specto.hoverfly.junit.dsl.matchers.HoverflyMatchers;
 import io.specto.hoverfly.junit.rule.HoverflyRule;
 import org.junit.*;
 import org.springframework.http.*;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
 import java.util.List;
 
 import static io.specto.hoverfly.junit.core.SimulationSource.dsl;
@@ -22,7 +19,6 @@ import static io.specto.hoverfly.junit.dsl.ResponseCreators.created;
 import static io.specto.hoverfly.junit.dsl.ResponseCreators.noContent;
 import static io.specto.hoverfly.junit.dsl.ResponseCreators.success;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class StatefulCaptureTest {
 

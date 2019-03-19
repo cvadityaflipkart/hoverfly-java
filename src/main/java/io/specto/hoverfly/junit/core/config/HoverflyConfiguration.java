@@ -29,7 +29,7 @@ public class HoverflyConfiguration {
     private String adminCertificate;
     private String proxyCaCertificate;
     private LocalMiddleware localMiddleware;
-    private List<String> captureHeaders = Collections.emptyList();
+    private List<String> captureHeaders;
     private boolean webServer;
     private boolean tlsVerificationDisabled;
     private boolean plainHttpTunneling;

@@ -19,15 +19,18 @@ public class ResponseDiffForRequestView {
     }
 
     public String createDiffMessage() {
-        StringBuilder message = new StringBuilder()
-            .append("\nFor the request with the simple definition:\n" + getRequest().toString())
-            .append("\n\nhave been recorded " + getDiffReports().size() + " diff(s):\n");
+        StringBuilder message = new StringBuilder().append("\nFor the request with the simple definition:\n")
+                .append(getRequest().toString())
+                .append("\n\nhave been recorded ")
+                .append(getDiffReports().size())
+                .append(" diff(s):\n");
 
         for (int i = 0; i < getDiffReports().size(); i++) {
             DiffReport diffReport = getDiffReports().get(i);
             message
-                .append(String.format("\n%s. diff report at %s:\n", i + 1, diffReport.getTimestamp()))
-                .append(diffReport.createDiffMessage() + "\n");
+                    .append(String.format("\n%s. diff report at %s:\n", i + 1, diffReport.getTimestamp()))
+                    .append(diffReport.createDiffMessage())
+                    .append("\n");
         }
         return message.toString();
     }

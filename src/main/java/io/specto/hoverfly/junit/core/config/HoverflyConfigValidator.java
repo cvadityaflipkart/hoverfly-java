@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Optional;
 
 
@@ -61,7 +60,7 @@ class HoverflyConfigValidator {
 
         // Check proxy CA cert exists
         if (hoverflyConfig.getProxyCaCertificate().isPresent()) {
-            findResourceOnClasspath(hoverflyConfig.getProxyCaCertificate().get());
+            checkResourceOnClasspath(hoverflyConfig.getProxyCaCertificate().get());
         }
 
         return hoverflyConfig;
@@ -79,9 +78,9 @@ class HoverflyConfigValidator {
         }
     }
 
-    private URL findResourceOnClasspath(String resourceName) {
+    private void checkResourceOnClasspath(String resourceName) {
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        return Optional.ofNullable(classLoader.getResource(resourceName))
+        Optional.ofNullable(classLoader.getResource(resourceName))
                 .orElseThrow(() -> new IllegalArgumentException("Resource not found with name: " + resourceName));
     }
 }

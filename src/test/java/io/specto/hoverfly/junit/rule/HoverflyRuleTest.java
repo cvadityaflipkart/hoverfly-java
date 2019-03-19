@@ -3,7 +3,6 @@ package io.specto.hoverfly.junit.rule;
 
 import io.specto.hoverfly.junit.core.Hoverfly;
 import io.specto.hoverfly.junit.core.SimulationSource;
-import io.specto.hoverfly.junit.core.model.Simulation;
 import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
@@ -19,10 +18,6 @@ import static org.mockito.Mockito.*;
 public class HoverflyRuleTest {
 
     private HoverflyRule hoverflyRule;
-
-    @Before
-    public void setUp() {
-    }
 
     @Test
     public void shouldNotImportSimulationSourceIfNoneIsSet() {
@@ -50,7 +45,7 @@ public class HoverflyRuleTest {
 
         hoverflyRule.before();
 
-        verify(mockHoverfly, never()).importSimulation(any());
+        verify(mockHoverfly, never()).simulate(any());
     }
 
 
