@@ -33,7 +33,7 @@ public class HoverflyConfiguration {
     private boolean tlsVerificationDisabled;
     private boolean plainHttpTunneling;
     private String upstreamProxy;
-    private Optional<Logger> hoverflyLogger;
+    private Logger hoverflyLogger;
     private boolean statefulCapture;
     private SimulationPreprocessor simulationPreprocessor;
     private String binaryNameFormat;
@@ -53,7 +53,7 @@ public class HoverflyConfiguration {
                           final List<String> captureHeaders,
                           final boolean webServer,
                           final boolean statefulCapture) {
-        this(proxyPort, adminPort, proxyLocalHost, destination, proxyCaCertificate, captureHeaders, webServer, Optional.empty(), statefulCapture);
+        this(proxyPort, adminPort, proxyLocalHost, destination, proxyCaCertificate, captureHeaders, webServer, null, statefulCapture);
         setScheme(scheme);
         setHost(host);
         this.authToken = authToken;
@@ -64,14 +64,14 @@ public class HoverflyConfiguration {
     /**
      * Create configurations for internal-managed hoverfly
      */
-    HoverflyConfiguration(final int proxyPort,
+    public HoverflyConfiguration(final int proxyPort,
                           final int adminPort,
                           final boolean proxyLocalHost,
                           final String destination,
                           final String proxyCaCertificate,
                           final List<String> captureHeaders,
                           final boolean webServer,
-                          final Optional<Logger> hoverflyLogger,
+                          final Logger hoverflyLogger,
                           final boolean statefulCapture
     ) {
         this.proxyPort = proxyPort;
@@ -232,7 +232,7 @@ public class HoverflyConfiguration {
     }
 
     public Optional<Logger> getHoverflyLogger() {
-        return hoverflyLogger;
+        return Optional.ofNullable(hoverflyLogger);
     }
 
     public boolean isStatefulCapture() {

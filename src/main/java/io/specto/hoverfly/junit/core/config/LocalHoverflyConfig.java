@@ -32,7 +32,7 @@ public class LocalHoverflyConfig extends HoverflyConfig {
     private boolean plainHttpTunneling;
     private LocalMiddleware localMiddleware;
     private String upstreamProxy;
-    private Optional<Logger> hoverflyLogger = Optional.ofNullable(LoggerFactory.getLogger("hoverfly"));
+    private Logger hoverflyLogger = LoggerFactory.getLogger("hoverfly");
 
     /**
      * Sets the SSL certificate file for overriding default Hoverfly self-signed certificate
@@ -108,7 +108,7 @@ public class LocalHoverflyConfig extends HoverflyConfig {
      * @return the {@link HoverflyConfig} for further customizations
      */
     public LocalHoverflyConfig logger(final String loggerName) {
-        this.hoverflyLogger = Optional.ofNullable(loggerName).map(LoggerFactory::getLogger);
+        this.hoverflyLogger = LoggerFactory.getLogger(loggerName);
         return this;
     }
 
@@ -117,7 +117,7 @@ public class LocalHoverflyConfig extends HoverflyConfig {
      * @return the {@link HoverflyConfig} for further customizations
      */
     public LocalHoverflyConfig logToStdOut() {
-        this.hoverflyLogger = Optional.empty();
+        this.hoverflyLogger = null;
         return this;
     }
 
