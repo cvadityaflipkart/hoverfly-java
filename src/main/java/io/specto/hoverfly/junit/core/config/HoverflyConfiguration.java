@@ -187,11 +187,11 @@ public class HoverflyConfiguration {
         }
     }
 
-    void setProxyPort(int proxyPort) {
+    public void setProxyPort(int proxyPort) {
         this.proxyPort = proxyPort;
     }
 
-    void setAdminPort(int adminPort) {
+    public  void setAdminPort(int adminPort) {
         this.adminPort = adminPort;
     }
 
