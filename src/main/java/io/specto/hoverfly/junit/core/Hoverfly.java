@@ -165,7 +165,7 @@ public class Hoverfly implements AutoCloseable {
         checkPortInUse(hoverflyConfig.getProxyPort());
         checkPortInUse(hoverflyConfig.getAdminPort());
 
-        final SystemConfig systemConfig = new SystemConfigFactory().createSystemConfig();
+        final SystemConfig systemConfig = new SystemConfigFactory(hoverflyConfig).createSystemConfig();
 
         Path binaryPath = tempFileManager.copyHoverflyBinary(systemConfig);
 

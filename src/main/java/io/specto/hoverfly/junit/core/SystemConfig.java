@@ -8,32 +8,26 @@ import io.specto.hoverfly.junit.core.SystemConfigFactory.OsName;
  */
 class SystemConfig {
 
-    private static final String BINARY_PATH_FORMAT = "hoverfly_%s_%s%s";
+    private final OsName osName;
+    private final ArchType archType;
+    private final String binaryNameFormat;
 
-    private OsName osName;
-    private ArchType archType;
-
-    SystemConfig(OsName osName, ArchType archType) {
+    SystemConfig(OsName osName, ArchType archType, String binaryNameFormat) {
         this.osName = osName;
         this.archType = archType;
+        this.binaryNameFormat = binaryNameFormat;
     }
-
-    SystemConfig() { }
 
     OsName getOsName() {
         return osName;
-    }
-
-    void setOsName(OsName osName) {
-        this.osName = osName;
     }
 
     ArchType getArchType() {
         return archType;
     }
 
-    void setArchType(ArchType archType) {
-        this.archType = archType;
+    String getBinaryNameFormat() {
+        return binaryNameFormat;
     }
 
     /**
@@ -44,6 +38,6 @@ class SystemConfig {
         if (osName == OsName.WINDOWS) {
             extension = ".exe";
         }
-        return String.format(BINARY_PATH_FORMAT, osName.getName(), archType.getName(), extension);
+        return String.format(binaryNameFormat, osName.getName(), archType.getName(), extension);
     }
 }

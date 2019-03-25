@@ -1,6 +1,7 @@
 package io.specto.hoverfly.junit.core;
 
 
+import io.specto.hoverfly.junit.core.config.HoverflyConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
@@ -87,5 +88,20 @@ public class SystemConfigFactoryTest {
         Throwable thrown = catchThrowable(() -> factory.createSystemConfig());
 
         assertThat(thrown).isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    public void shouldBeAbleToUseBinaryNameFormatFromHoverflyConfiguration() {
+
+        HoverflyConfiguration configs = mock(HoverflyConfiguration.class);
+        Whitebox.setInternalState(factory, "configs", configs);
+
+        when(configs.getBinaryNameFormat()).thenReturn("hoverfly2_%s_%s%s");
+        when(systemInfo.isOsLinux()).thenReturn(true);
+        when(systemInfo.is64BitSystem()).thenReturn(true);
+
+        SystemConfig systemConfig = factory.createSystemConfig();
+
+        assertThat(systemConfig.getHoverflyBinaryName()).isEqualTo("hoverfly2_linux_amd64");
     }
 }

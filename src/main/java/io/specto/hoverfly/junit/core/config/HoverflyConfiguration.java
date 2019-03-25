@@ -4,7 +4,6 @@ import io.specto.hoverfly.junit.core.Hoverfly;
 import io.specto.hoverfly.junit.core.SimulationPreprocessor;
 import org.slf4j.Logger;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +36,7 @@ public class HoverflyConfiguration {
     private Optional<Logger> hoverflyLogger;
     private boolean statefulCapture;
     private SimulationPreprocessor simulationPreprocessor;
+    private String binaryNameFormat;
 
     /**
      * Create configurations for external hoverfly
@@ -170,6 +170,7 @@ public class HoverflyConfiguration {
         return upstreamProxy;
     }
 
+
     public void setUpstreamProxy(String upstreamProxy) {
         this.upstreamProxy = upstreamProxy;
     }
@@ -248,5 +249,13 @@ public class HoverflyConfiguration {
 
     public Optional<SimulationPreprocessor> getSimulationPreprocessor() {
         return Optional.ofNullable(simulationPreprocessor);
+    }
+
+    public String getBinaryNameFormat() {
+        return binaryNameFormat;
+    }
+
+    public void setBinaryNameFormat(String binaryNameFormat) {
+        this.binaryNameFormat = binaryNameFormat;
     }
 }

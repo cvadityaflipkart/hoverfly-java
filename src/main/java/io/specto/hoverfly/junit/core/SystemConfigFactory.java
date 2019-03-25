@@ -1,33 +1,51 @@
 package io.specto.hoverfly.junit.core;
 
+import io.specto.hoverfly.junit.core.config.HoverflyConfiguration;
+
 /**
  * Create platform specific configuration based on system info
  */
 class SystemConfigFactory {
 
+    static final String DEFAULT_BINARY_NAME_FORMAT = "hoverfly_%s_%s%s";
+
     private SystemInfo systemInfo = new SystemInfo();
+    private HoverflyConfiguration configs;
+
+    SystemConfigFactory() {
+    }
+
+    SystemConfigFactory(HoverflyConfiguration configs) {
+        this.configs = configs;
+    }
 
     SystemConfig createSystemConfig() {
 
-        SystemConfig systemConfig = new SystemConfig();
+        OsName osName;
+        ArchType archType;
+        String binaryNameFormat = DEFAULT_BINARY_NAME_FORMAT;
 
         if (systemInfo.isOsWindows()) {
-           systemConfig.setOsName(OsName.WINDOWS);
+           osName = OsName.WINDOWS;
         } else if (systemInfo.isOsLinux()) {
-            systemConfig.setOsName(OsName.LINUX);
+            osName = OsName.LINUX;
         } else if (systemInfo.isOsMac()) {
-            systemConfig.setOsName(OsName.OSX);
+            osName = OsName.OSX;
         } else {
             throw new UnsupportedOperationException(systemInfo.getOsName() + " is not currently supported");
         }
 
         if (systemInfo.is64BitSystem()) {
-            systemConfig.setArchType(ArchType.ARCH_AMD64);
+            archType = ArchType.ARCH_AMD64;
         } else {
-            systemConfig.setArchType(ArchType.ARCH_386);
+            archType = ArchType.ARCH_386;
         }
 
-        return systemConfig;
+        if (configs != null && configs.getBinaryNameFormat() != null) {
+            binaryNameFormat = configs.getBinaryNameFormat();
+        }
+
+        return new SystemConfig(osName, archType, binaryNameFormat);
     }
 
     enum OsName {
