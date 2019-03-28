@@ -367,6 +367,22 @@ public class HoverflyTest {
         verify(hoverflyClient).deleteJournal();
     }
 
+
+    @Test
+    public void shouldResetSimulationJournalAndStateWhenCallingReset() {
+
+        hoverfly = new Hoverfly(SIMULATE);
+
+        HoverflyClient hoverflyClient = createMockHoverflyClient(hoverfly);
+        when(hoverflyClient.getHealth()).thenReturn(true);
+
+        hoverfly.reset();
+
+        verify(hoverflyClient).deleteJournal();
+        verify(hoverflyClient).deleteSimulation();
+        verify(hoverflyClient).deleteState();
+    }
+
     @Test
     public void shouldCopySslCertAndKeyToTempFolderIfPresent () {
         // Given

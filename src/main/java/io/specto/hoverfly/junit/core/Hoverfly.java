@@ -282,8 +282,8 @@ public class Hoverfly implements AutoCloseable {
     public void reset() {
         hoverflyClient.deleteSimulation();
 
-        // TODO should reset state and diff
         resetJournal();
+        resetState();
     }
 
 

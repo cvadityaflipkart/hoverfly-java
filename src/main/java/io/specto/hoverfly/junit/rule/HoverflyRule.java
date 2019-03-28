@@ -324,6 +324,7 @@ public class HoverflyRule extends ExternalResource {
         if (sources.length > 0) {
             this.simulationSources.addAll(Arrays.asList(sources));
         }
+        hoverfly.resetState();
         importSimulation();
         hoverfly.resetJournal();
     }

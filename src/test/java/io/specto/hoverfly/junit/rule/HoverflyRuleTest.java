@@ -95,13 +95,14 @@ public class HoverflyRuleTest {
     }
 
     @Test
-    public void shouldCallResetJournalBeforeSimulate() {
+    public void shouldResetJournalAndStateBeforeSimulate() {
         hoverflyRule = HoverflyRule.inSimulationMode();
         Hoverfly mockHoverfly = getHoverflyMock(hoverflyRule);
 
         hoverflyRule.simulate(empty());
 
         verify(mockHoverfly).resetJournal();
+        verify(mockHoverfly).resetState();
     }
 
     private Hoverfly getHoverflyMock(HoverflyRule hoverflyRule) {
