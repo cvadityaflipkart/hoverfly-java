@@ -90,7 +90,7 @@ public class Hoverfly implements AutoCloseable {
     private boolean useDefaultSslCert = true;
 
     // Visible for testing
-    Optional<Thread> shutdownThread = Optional.empty();
+    Thread shutdownThread = null;
 
     /**
      * Instantiates {@link Hoverfly}
@@ -130,8 +130,8 @@ public class Hoverfly implements AutoCloseable {
     public void start() {
 
         // Register a shutdown hook to invoke Hoverfly cleanup
-        shutdownThread = Optional.of(new Thread(this::close));
-        Runtime.getRuntime().addShutdownHook(shutdownThread.get());
+        shutdownThread = new Thread(this::close);
+        Runtime.getRuntime().addShutdownHook(shutdownThread);
 
         if (startedProcess != null) {
             LOGGER.warn("Local Hoverfly is already running.");
@@ -552,7 +552,9 @@ public class Hoverfly implements AutoCloseable {
 
 
         try {
-            shutdownThread.ifPresent(Runtime.getRuntime()::removeShutdownHook);
+            if (shutdownThread != null) {
+                Runtime.getRuntime().removeShutdownHook(shutdownThread);
+            }
         } catch (IllegalStateException e) {
             // Ignoring this exception as it only means that the JVM is already shutting down
         }

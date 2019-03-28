@@ -108,7 +108,7 @@ public class HoverflyTest {
         hoverfly.start();
         hoverfly.close();
 
-        assertThat(Runtime.getRuntime().removeShutdownHook(hoverfly.shutdownThread.get())).as("Shutdown hook should be removed").isFalse();
+        assertThat(Runtime.getRuntime().removeShutdownHook(hoverfly.shutdownThread)).as("Shutdown hook should be removed").isFalse();
     }
 
     @Test
