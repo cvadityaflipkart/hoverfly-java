@@ -127,26 +127,12 @@ public class LocalHoverflyConfig extends HoverflyConfig {
 
     /**
      * Set additional commands for starting Hoverfly.
-     * @param command Hoverfly command flag
      * @param commands More Hoverfly command flags.
      * @return the {@link HoverflyConfig} for further customizations
      */
-    public LocalHoverflyConfig addCommands(String command, String... commands) {
-
-        this.commands.add(command);
-        this.commands.addAll(Arrays.asList(commands));
-        return this;
-    }
-
-    public LocalHoverflyConfig addCommands(String[] commands) {
+    public LocalHoverflyConfig addCommands(String... commands) {
 
         this.commands.addAll(Arrays.asList(commands));
-        return this;
-    }
-
-    public LocalHoverflyConfig addCommands(String command) {
-
-        this.commands.add(command);
         return this;
     }
 
