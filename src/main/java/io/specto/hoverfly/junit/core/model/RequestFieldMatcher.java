@@ -12,12 +12,14 @@ import static io.specto.hoverfly.junit.core.model.RequestFieldMatcher.MatcherTyp
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RequestFieldMatcher<T> {
 
-    private final MatcherType matcher;
-    private final T value;
+    private MatcherType matcher;
+    private T value;
 
-    @JsonCreator
-    public RequestFieldMatcher(@JsonProperty("matcher") MatcherType matcher,
-                               @JsonProperty("value") T value) {
+    public RequestFieldMatcher() {
+    }
+
+    public RequestFieldMatcher(MatcherType matcher,
+                               T value) {
         this.matcher = matcher;
         this.value = value;
     }
@@ -26,8 +28,16 @@ public class RequestFieldMatcher<T> {
         return matcher;
     }
 
+    public void setMatcher(MatcherType matcher) {
+        this.matcher = matcher;
+    }
+
     public T getValue() {
         return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
     }
 
     public static RequestFieldMatcher newExactMatcher(String value) {

@@ -12,10 +12,8 @@
  */
 package io.specto.hoverfly.junit.core.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -29,34 +27,36 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Request {
 
-    private final List<RequestFieldMatcher> path;
+    private List<RequestFieldMatcher> path;
 
-    private final List<RequestFieldMatcher> method;
+    private List<RequestFieldMatcher> method;
 
-    private final List<RequestFieldMatcher> destination;
+    private List<RequestFieldMatcher> destination;
 
-    private final List<RequestFieldMatcher> scheme;
+    private List<RequestFieldMatcher> scheme;
 
-    private final Map<String, List<RequestFieldMatcher>> query;
+    private Map<String, List<RequestFieldMatcher>> query;
 
-    private final List<RequestFieldMatcher> deprecatedQuery;
+    private List<RequestFieldMatcher> deprecatedQuery;
 
-    private final List<RequestFieldMatcher> body;
+    private List<RequestFieldMatcher> body;
 
-    private final Map<String, List<RequestFieldMatcher>> headers;
+    private Map<String, List<RequestFieldMatcher>> headers;
 
-    private final Map<String, String> requiresState;
+    private Map<String, String> requiresState;
 
-    @JsonCreator
-    public Request(@JsonProperty("path") List<RequestFieldMatcher> path,
-                   @JsonProperty("method") List<RequestFieldMatcher> method,
-                   @JsonProperty("destination") List<RequestFieldMatcher> destination,
-                   @JsonProperty("scheme") List<RequestFieldMatcher> scheme,
-                   @JsonProperty("query") Map<String, List<RequestFieldMatcher>> query,
-                   @JsonProperty("deprecatedQuery") List<RequestFieldMatcher> deprecatedQuery,
-                   @JsonProperty("body") List<RequestFieldMatcher> body,
-                   @JsonProperty("headers") Map<String, List<RequestFieldMatcher>> headers,
-                   @JsonProperty("requiresState") Map<String, String> requiresState) {
+    public Request() {
+    }
+
+    public Request(List<RequestFieldMatcher> path,
+                   List<RequestFieldMatcher> method,
+                   List<RequestFieldMatcher> destination,
+                   List<RequestFieldMatcher> scheme,
+                   Map<String, List<RequestFieldMatcher>> query,
+                   List<RequestFieldMatcher> deprecatedQuery,
+                   List<RequestFieldMatcher> body,
+                   Map<String, List<RequestFieldMatcher>> headers,
+                   Map<String, String> requiresState) {
         this.path = path;
         this.method = method;
         this.destination = destination;
@@ -72,36 +72,72 @@ public class Request {
         return path;
     }
 
+    public void setPath(List<RequestFieldMatcher> path) {
+        this.path = path;
+    }
+
     public List<RequestFieldMatcher> getMethod() {
         return method;
+    }
+
+    public void setMethod(List<RequestFieldMatcher> method) {
+        this.method = method;
     }
 
     public List<RequestFieldMatcher> getDestination() {
         return destination;
     }
 
+    public void setDestination(List<RequestFieldMatcher> destination) {
+        this.destination = destination;
+    }
+
     public List<RequestFieldMatcher> getScheme() {
         return scheme;
+    }
+
+    public void setScheme(List<RequestFieldMatcher> scheme) {
+        this.scheme = scheme;
     }
 
     public Map<String, List<RequestFieldMatcher>> getQuery() {
         return query;
     }
 
+    public void setQuery(Map<String, List<RequestFieldMatcher>> query) {
+        this.query = query;
+    }
+
     public List<RequestFieldMatcher> getDeprecatedQuery() {
         return deprecatedQuery;
+    }
+
+    public void setDeprecatedQuery(List<RequestFieldMatcher> deprecatedQuery) {
+        this.deprecatedQuery = deprecatedQuery;
     }
 
     public List<RequestFieldMatcher> getBody() {
         return body;
     }
 
+    public void setBody(List<RequestFieldMatcher> body) {
+        this.body = body;
+    }
+
     public Map<String, List<RequestFieldMatcher>> getHeaders() {
         return headers;
     }
 
+    public void setHeaders(Map<String, List<RequestFieldMatcher>> headers) {
+        this.headers = headers;
+    }
+
     public Map<String, String> getRequiresState() {
         return requiresState;
+    }
+
+    public void setRequiresState(Map<String, String> requiresState) {
+        this.requiresState = requiresState;
     }
 
     public static class Builder {
