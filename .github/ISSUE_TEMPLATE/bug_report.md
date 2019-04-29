@@ -16,10 +16,6 @@ Welcome to the Hoverfly Java issue tracker! Before creating an issue, please not
 -->
 
 ## Description of the bug
-A clear and concise description of what the bug is.
-
-## Context information (for bug reports)
-What you were doing
 
 ## Steps to reproduce the issue
 
@@ -36,5 +32,5 @@ What you were doing
 
 ## Additional relevant information
 If not indicated above:
-1. Hoverfly Java version: e.g. 0.11.2
+1. Hoverfly Java version: 
 2. Anything that might help us to diagnose the problem
