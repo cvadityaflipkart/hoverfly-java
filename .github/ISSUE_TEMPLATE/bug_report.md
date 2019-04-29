@@ -23,10 +23,6 @@ What you were doing
 
 ## Steps to reproduce the issue
 
-1.
-2.
-3.
-
 ### Observed result
 **Hoverfly Java and Hoverfly error messages seen (If none, say none)**
 ```
@@ -40,7 +36,5 @@ What you were doing
 
 ## Additional relevant information
 If not indicated above:
-1. OS and version: e.g. macOS Mojave, Windows 10, Red Hat Linux, ...
-2. Hoverfly Java version: e.g. 0.11.2
-3. Tools/Browser you were using
-4. Anything that might help us to diagnose the problem
+1. Hoverfly Java version: e.g. 0.11.2
+2. Anything that might help us to diagnose the problem
