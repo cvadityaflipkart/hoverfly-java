@@ -40,21 +40,17 @@ class HoverflyRuleUtils {
         return Paths.get(DEFAULT_HOVERFLY_EXPORT_PATH).resolve(fileName);
     }
 
-    /**
-     * Creates src/test/resources/hoverfly directory if it does not exist
-     */
-    static void createTestResourcesHoverflyDirectoryIfNoneExisting() {
-        final Path path = Paths.get(DEFAULT_HOVERFLY_EXPORT_PATH);
+    static Path createDirectoryIfNotExist(String dirPath) {
+        final Path path = Paths.get(dirPath);
 
-        if (! existsAndIsDirectory(path)) {
-            // Delete in case src/test/resources/hoverfly is a file
+        if (!existsAndIsDirectory(path)) {
             try {
-                Files.deleteIfExists(path);
                 Files.createDirectories(path);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+        return path;
     }
 
     private static boolean existsAndIsDirectory(Path path) {

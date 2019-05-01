@@ -105,6 +105,14 @@ public class HoverflyRuleTest {
         verify(mockHoverfly).resetState();
     }
 
+    @Test
+    public void shouldThrowExceptionIfOutputFilenameIsEmpty() {
+
+        assertThatThrownBy(() -> HoverflyRule.inCaptureMode(""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Output simulation file name can not be blank.");
+    }
+
     private Hoverfly getHoverflyMock(HoverflyRule hoverflyRule) {
         Hoverfly mockHoverfly = mock(Hoverfly.class);
         Whitebox.setInternalState(hoverflyRule, "hoverfly", mockHoverfly);

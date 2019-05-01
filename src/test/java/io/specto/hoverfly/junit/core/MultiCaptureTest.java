@@ -27,6 +27,7 @@ public class MultiCaptureTest {
     private static final Path FIRST_RECORDED_SIMULATION_FILE = Paths.get("src/test/resources/hoverfly/first-multi-capture/first-multi-capture-scenario.json");
     private static final Path SECOND_RECORDED_SIMULATION_FILE = Paths.get("src/test/resources/hoverfly/second-multi-capture-scenario.json");
     private static final Path THIRD_RECORDED_SIMULATION_FILE = Paths.get("src/test/resources/hoverfly/third-multi-capture/another/third-multi-capture-scenario.json");
+    private static final Path FORTH_RECORDED_SIMULATION_FILE = Paths.get("src/integration-test/resources/hoverfly/forth-multi-capture-scenario.json");
     private static final String EXPECTED_SIMULATION_JSON = "expected-simulation.json";
     private static final String OTHER_EXPECTED_SIMULATION_JSON = "expected-simulation-other.json";
 
@@ -47,6 +48,7 @@ public class MultiCaptureTest {
 
         // Delete individual file
         Files.deleteIfExists(SECOND_RECORDED_SIMULATION_FILE);
+        Files.deleteIfExists(FORTH_RECORDED_SIMULATION_FILE);
 
         // Delete directory and contents
         final File thirdSimulationDirectory = THIRD_RECORDED_SIMULATION_FILE.getParent().toFile();
@@ -76,6 +78,12 @@ public class MultiCaptureTest {
 
         // When
         restTemplate.getForObject(webServerBaseUrl, String.class);
+
+        // Given
+        hoverflyRule.capture("src/integration-test/resources/hoverfly", "forth-multi-capture-scenario.json");
+
+        // When
+        restTemplate.getForObject(webServerBaseUrl, String.class);
     }
 
     // We have to assert after the rule has executed because that's when the classpath is written to the filesystem
@@ -87,10 +95,12 @@ public class MultiCaptureTest {
         final String firstActualSimulation = new String(Files.readAllBytes(FIRST_RECORDED_SIMULATION_FILE), defaultCharset());
         final String secondActualSimulation = new String(Files.readAllBytes(SECOND_RECORDED_SIMULATION_FILE), defaultCharset());
         final String thirdActualSimulation = new String(Files.readAllBytes(THIRD_RECORDED_SIMULATION_FILE), defaultCharset());
+        final String forthActualSimulation = new String(Files.readAllBytes(FORTH_RECORDED_SIMULATION_FILE), defaultCharset());
 
         JSONAssert.assertEquals(expectedSimulation, firstActualSimulation, JSONCompareMode.LENIENT);
         JSONAssert.assertEquals(otherExpectedSimulation, secondActualSimulation, JSONCompareMode.LENIENT);
         JSONAssert.assertEquals(expectedSimulation, thirdActualSimulation, JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(expectedSimulation, forthActualSimulation, JSONCompareMode.LENIENT);
 
         CaptureModeTestWebServer.terminate();
     }

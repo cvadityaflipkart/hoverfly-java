@@ -18,6 +18,7 @@ import io.specto.hoverfly.junit.dsl.HoverflyDsl;
 import io.specto.hoverfly.junit.dsl.RequestMatcherBuilder;
 import io.specto.hoverfly.junit.dsl.StubServiceBuilder;
 import io.specto.hoverfly.junit.verification.VerificationCriteria;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -29,10 +30,12 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Predicate;
 
 import static io.specto.hoverfly.junit.core.HoverflyConfig.localConfigs;
+import static io.specto.hoverfly.junit.core.HoverflyConstants.DEFAULT_HOVERFLY_EXPORT_PATH;
 import static io.specto.hoverfly.junit.core.HoverflyMode.*;
 import static io.specto.hoverfly.junit.core.SimulationSource.file;
 import static io.specto.hoverfly.junit.rule.HoverflyRuleUtils.*;
@@ -134,7 +137,7 @@ public class HoverflyRule extends ExternalResource {
 
     /**
      * Instantiates a rule which runs {@link Hoverfly} in capture mode
-     * @param outputFilename the path to the recorded name relative to src/test/resources/hoverfly
+     * @param outputFilename the output simulation file name relative to src/test/resources/hoverfly
      * @return the rule
      */
     public static HoverflyRule inCaptureMode(String outputFilename) {
@@ -143,13 +146,37 @@ public class HoverflyRule extends ExternalResource {
 
     /**
      * Instantiates a rule which runs {@link Hoverfly} in capture mode
-     * @param outputFilename the path to the recorded name relative to src/test/resources/hoverfly
+     * @param outputFilename the output simulation file name  relative to src/test/resources/hoverfly
      * @param hoverflyConfig the config
      * @return the rule
      */
     public static HoverflyRule inCaptureMode(String outputFilename, HoverflyConfig hoverflyConfig) {
-        createTestResourcesHoverflyDirectoryIfNoneExisting();
-        return new HoverflyRule(fileRelativeToTestResourcesHoverfly(outputFilename), hoverflyConfig);
+        return inCaptureMode(DEFAULT_HOVERFLY_EXPORT_PATH, outputFilename, hoverflyConfig);
+    }
+
+    /**
+     * Instantiates a rule which runs {@link Hoverfly} in capture mode
+     * @param outputDir the directory path relative to your project root for exporting the simulation file
+     * @param outputFilename the output simulation file name
+     * @return the rule
+     */
+    public static HoverflyRule inCaptureMode(String outputDir, String outputFilename) {
+        return inCaptureMode(outputDir, outputFilename, localConfigs());
+    }
+
+    /**
+     * Instantiates a rule which runs {@link Hoverfly} in capture mode
+     * @param outputDir the directory path relative to your project root for exporting the simulation file
+     * @param outputFilename the output simulation file name
+     * @param hoverflyConfig the config
+     * @return the rule
+     */
+    public static HoverflyRule inCaptureMode(String outputDir, String outputFilename, HoverflyConfig hoverflyConfig) {
+        if (StringUtils.isBlank(outputFilename)) {
+            throw new IllegalArgumentException("Output simulation file name can not be blank.");
+        }
+        Path exportPath = createDirectoryIfNotExist(outputDir);
+        return new HoverflyRule(exportPath.resolve(outputFilename), hoverflyConfig);
     }
 
 
@@ -332,16 +359,27 @@ public class HoverflyRule extends ExternalResource {
     /**
      * Stores what's currently been captured in the currently assigned file, reset simulations and journal logs, then starts capture again
      * ready to store in the new file once complete.
-     * @param recordFile the path where captured or simulated traffic is taken. Relative to src/test/resources/hoverfly
+     * @param outputFilename the output simulation file name relative to src/test/resources/hoverfly
      */
-    public void capture(final String recordFile) {
+    public void capture(final String outputFilename) {
+        capture(DEFAULT_HOVERFLY_EXPORT_PATH, outputFilename);
+    }
+
+    /**
+     * Stores what's currently been captured in the currently assigned file, reset simulations and journal logs, then starts capture again
+     * ready to store in the new file once complete.
+     * @param outputDir the directory path relative to your project root for exporting the simulation file
+     * @param outputFilename the output simulation file name relative to src/test/resources/hoverfly
+     */
+    public void capture(final String outputDir, final String outputFilename) {
         checkMode(mode -> mode == CAPTURE);
         if (capturePath != null) {
             hoverfly.exportSimulation(capturePath);
         }
         hoverfly.reset();
-        capturePath = fileRelativeToTestResourcesHoverfly(recordFile);
+        capturePath = Paths.get(outputDir).resolve(outputFilename);
     }
+
 
     /**
      * Get custom Hoverfly header name used by Http client to authenticate with secured Hoverfly proxy
