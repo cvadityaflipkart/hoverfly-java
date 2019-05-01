@@ -53,7 +53,7 @@ public class HoverflyDslMatcherTest {
                     .anyQueryParams()
                     .willReturn(success(json(booking)))
 
-                    // Match XML body
+                    // Match JSON body
                     .put("/api/bookings/1")
                     .header("Content-Type", contains("application/json"))
                     .body(equalsToJson("{\"flightId\":\"1\",\"class\":\"PREMIUM\"}"))
@@ -61,6 +61,12 @@ public class HoverflyDslMatcherTest {
 
                     .put("/api/bookings/1")
                     .body(equalsToJson(json(booking)))
+                    .willReturn(success())
+
+                    // Match partial JSON body
+                    .put("/api/bookings/1")
+                    .header("Content-Type", contains("application/json"))
+                    .body(matchesPartialJson("{\"flightId\":\"1\"}"))
                     .willReturn(success())
 
                     // JsonPath Matcher
@@ -232,6 +238,20 @@ public class HoverflyDslMatcherTest {
         final RequestEntity<String> bookFlightRequest = RequestEntity.put(new URI("http://www.my-test.com/api/bookings/1"))
                 .contentType(APPLICATION_JSON)
                 .body(HttpBodyConverter.OBJECT_MAPPER.writeValueAsString(booking));
+
+        // When
+        final ResponseEntity<String> bookFlightResponse = restTemplate.exchange(bookFlightRequest, String.class);
+
+        // Then
+        assertThat(bookFlightResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void shouldBeAbleToMatchJSONBodyPartially() throws Exception {
+        // Given
+        final RequestEntity<String> bookFlightRequest = RequestEntity.put(new URI("http://www.my-test.com/api/bookings/1"))
+                .contentType(APPLICATION_JSON)
+                .body("{\"flightId\": \"1\"}");
 
         // When
         final ResponseEntity<String> bookFlightResponse = restTemplate.exchange(bookFlightRequest, String.class);

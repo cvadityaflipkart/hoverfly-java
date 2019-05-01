@@ -64,6 +64,11 @@ public class RequestFieldMatcher<T> {
         return new RequestFieldMatcher<>(MatcherType.JSON, value);
     }
 
+
+    public static RequestFieldMatcher newJsonPartialMatcher(String value) {
+        return new RequestFieldMatcher<>(MatcherType.JSONPARTIAL, value);
+    }
+
     public static RequestFieldMatcher newJsonPathMatch(String value) {
         return new RequestFieldMatcher<>(MatcherType.JSONPATH, value);
     }
@@ -76,6 +81,7 @@ public class RequestFieldMatcher<T> {
         XML,
         XPATH,
         JSON,
+        JSONPARTIAL,
         JSONPATH;
 
 

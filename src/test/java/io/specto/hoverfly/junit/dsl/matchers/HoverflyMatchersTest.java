@@ -71,6 +71,14 @@ public class HoverflyMatchersTest {
     }
 
     @Test
+    public void shouldCreatePartialJsonMatcherFromString() {
+        RequestFieldMatcher matcher = HoverflyMatchers.matchesPartialJson("{\"flightId\":\"1\",\"class\":\"PREMIUM\"}");
+
+        assertThat(matcher.getMatcher()).isEqualTo(RequestFieldMatcher.MatcherType.JSONPARTIAL);
+        assertThat(matcher.getValue()).isEqualTo("{\"flightId\":\"1\",\"class\":\"PREMIUM\"}");
+    }
+
+    @Test
     public void shouldThrowExceptionIfInputStringIsInvalidJsonFormat() {
 
         assertThatThrownBy(() -> HoverflyMatchers.equalsToJson("{\"flightId\":\"1\",\"class\":\"PREMIUM\""))

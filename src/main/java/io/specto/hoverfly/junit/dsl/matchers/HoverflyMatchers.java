@@ -86,7 +86,7 @@ public class HoverflyMatchers {
     /**
      * Create a matcher that matches on the given JSON
      * @param value the JSON string value
-     * @return an {@link RequestFieldMatcher} that includes jsonMatch
+     * @return an {@link RequestFieldMatcher}
      */
     public static RequestFieldMatcher equalsToJson(String value) {
         validateJson(value);
@@ -103,9 +103,28 @@ public class HoverflyMatchers {
     }
 
     /**
+     * Create a matcher that matches on the given partial JSON document
+     * @param value the JSON string value
+     * @return an {@link RequestFieldMatcher}
+     */
+    public static RequestFieldMatcher matchesPartialJson(String value) {
+        validateJson(value);
+        return RequestFieldMatcher.newJsonPartialMatcher(value);
+    }
+
+    /**
+     * Create a matcher that matches on a partial JSON document serialized from a JAVA object by {@link HttpBodyConverter}
+     * @param converter the {@link HttpBodyConverter} with an object to be serialized to JSON
+     * @return an {@link RequestFieldMatcher}
+     */
+    public static RequestFieldMatcher matchesPartialJson(HttpBodyConverter converter) {
+        return matchesPartialJson(converter.body());
+    }
+
+    /**
      * Create a matcher that matches on the given JsonPath expression
      * @param expression the JsonPath expression
-     * @return an {@link RequestFieldMatcher} that includes jsonPathMatch
+     * @return an {@link RequestFieldMatcher}
      */
     public static RequestFieldMatcher matchesJsonPath(String expression) {
         return RequestFieldMatcher.newJsonPathMatch(expression);
@@ -114,7 +133,7 @@ public class HoverflyMatchers {
     /**
      * Create a matcher that matches on the given XML
      * @param value the XML string value
-     * @return an {@link RequestFieldMatcher} that includes xmlMatch
+     * @return an {@link RequestFieldMatcher}
      */
     public static RequestFieldMatcher equalsToXml(String value) {
         validateXml(value);
@@ -133,7 +152,7 @@ public class HoverflyMatchers {
     /**
      * Create a matcher that matches on the given XPath expression
      * @param expression the XPath expression
-     * @return an {@link RequestFieldMatcher} that includes xpathMatch
+     * @return an {@link RequestFieldMatcher}
      */
     public static RequestFieldMatcher matchesXPath(String expression) {
         return RequestFieldMatcher.newXpathMatcher(expression);

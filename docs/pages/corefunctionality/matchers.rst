@@ -24,6 +24,10 @@ Here are some examples:
             .body(equalsToJson(json(booking)))      // Matches body which equals to a JSON Object
             .willReturn(success())
 
+            .put("/api/bookings/1")
+            .body(matchesPartialJson(json(booking)))// Matches body which is a superset of a JSON Object (Partial JSON matching)
+            .willReturn(success())
+
             .post("/api/bookings")
             .body(matchesJsonPath("$.flightId"))    // Matches body with a JSON path expression
             .willReturn(created("http://localhost/api/bookings/1"))
