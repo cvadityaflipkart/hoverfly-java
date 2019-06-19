@@ -74,8 +74,8 @@ public class SslConfigurer {
     private void setDefaultSslContext(URL pemFile) {
         try (InputStream pemInputStream = pemFile.openStream()) {
 
-            KeyStore trustStore = createTrustStore(pemInputStream);
-            trustManagers = createTrustManagers(trustStore);
+            KeyStore keyStore = createKeyStore(pemInputStream);
+            trustManagers = createTrustManagers(keyStore);
 
             sslContext = createSslContext(trustManagers);
 
@@ -86,28 +86,28 @@ public class SslConfigurer {
         }
     }
 
-    private static KeyStore createTrustStore(InputStream pemInputStream) throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException {
-        CertificateFactory certFactory = CertificateFactory.getInstance("X509");
+    private static KeyStore createKeyStore(InputStream pemInputStream) throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException {
+        CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
         X509Certificate cert = (X509Certificate) certFactory.generateCertificate(pemInputStream);
 
-        KeyStore trustStore = KeyStore.getInstance("JKS");
-        trustStore.load(null);
+        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        keyStore.load(null);
 
         String alias = cert.getSubjectX500Principal().getName();
-        trustStore.setCertificateEntry(alias, cert);
-        return trustStore;
+        keyStore.setCertificateEntry(alias, cert);
+        return keyStore;
     }
 
     /**
      * Create custom trust manager that verify server authenticity using both default JVM trust store and hoverfly default trust store
      */
-    private TrustManager[] createTrustManagers(KeyStore hoverflyTrustStore) throws NoSuchAlgorithmException, KeyStoreException {
+    private TrustManager[] createTrustManagers(KeyStore hoverflyKeyStore) throws NoSuchAlgorithmException, KeyStoreException {
         TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        // initialize a trust manager factory with default trust store
+        // initialize a trust manager factory with default key store
         X509TrustManager defaultTm = getTrustManager(tmf, null);
 
-        // initialize a trust manager factory with hoverfly trust store
-        X509TrustManager hoverflyTm = getTrustManager(tmf, hoverflyTrustStore);
+        // initialize a trust manager factory with hoverfly key store
+        X509TrustManager hoverflyTm = getTrustManager(tmf, hoverflyKeyStore);
 
         X509TrustManager customTm = new X509TrustManager() {
             @Override
@@ -138,8 +138,8 @@ public class SslConfigurer {
         return sslContext;
     }
 
-    private X509TrustManager getTrustManager(TrustManagerFactory trustManagerFactory, KeyStore trustStore) throws KeyStoreException {
-        trustManagerFactory.init(trustStore);
+    private X509TrustManager getTrustManager(TrustManagerFactory trustManagerFactory, KeyStore keyStore) throws KeyStoreException {
+        trustManagerFactory.init(keyStore);
 
         TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
 
