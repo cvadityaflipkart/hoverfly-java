@@ -1,13 +1,7 @@
 package io.specto.hoverfly.ruletest;
 
-import com.google.common.io.Resources;
 import io.specto.hoverfly.junit.rule.HoverflyRule;
 import io.specto.hoverfly.models.SimpleBooking;
-import io.specto.hoverfly.util.SslUtils;
-import java.net.URL;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import javax.net.ssl.SSLContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.ClassRule;
@@ -17,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.time.LocalDate;
 
 import static io.specto.hoverfly.junit.core.HoverflyConfig.localConfigs;
 import static io.specto.hoverfly.junit.core.SimulationSource.dsl;
@@ -46,9 +42,7 @@ public class HoverflyRuleSslConfigurationTest {
         ));
 
         RestTemplate restTemplate = new RestTemplate();
-        URL certUrl = Resources.getResource("ssl/ca.crt");
-        SSLContext sslContext = SslUtils.createSslContextFromCertFile(Paths.get(certUrl.toURI()));
-        CloseableHttpClient httpsClient = HttpClients.custom().useSystemProperties().setSSLContext(sslContext).build();
+        CloseableHttpClient httpsClient = HttpClients.custom().useSystemProperties().setSSLContext(hoverflyRule.getSslConfigurer().getSslContext()).build();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpsClient));
 
         // When

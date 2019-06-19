@@ -87,7 +87,6 @@ public class Hoverfly implements AutoCloseable {
 
     private final TempFileManager tempFileManager = new TempFileManager();
     private StartedProcess startedProcess;
-    private boolean useDefaultSslCert = true;
 
     // Visible for testing
     Thread shutdownThread = null;
@@ -154,7 +153,9 @@ public class Hoverfly implements AutoCloseable {
 
         if (hoverflyConfig.getProxyCaCertificate().isPresent()) {
           sslConfigurer.setDefaultSslContext(hoverflyConfig.getProxyCaCertificate().get());
-        } else if (useDefaultSslCert) {
+        } else if (StringUtils.isNotBlank(hoverflyConfig.getSslCertificatePath())) {
+            sslConfigurer.setDefaultSslContext(hoverflyConfig.getSslCertificatePath());
+        } else {
             sslConfigurer.setDefaultSslContext();
         }
 
@@ -190,7 +191,6 @@ public class Hoverfly implements AutoCloseable {
             tempFileManager.copyClassPathResource(hoverflyConfig.getSslKeyPath(), "ca.key");
             commands.add("-key");
             commands.add("ca.key");
-            useDefaultSslCert = false;
         }
         if (hoverflyConfig.isPlainHttpTunneling()) {
             commands.add("-plain-http-tunneling");
