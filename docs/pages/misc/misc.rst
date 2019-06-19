@@ -120,15 +120,13 @@ Or with Gradle add the repository to your build.gradle file:
 
 
 Trusting Hoverfly certificate
-=============================
+-----------------------------
 
 Your HTTP client need to trust Hoverfly's self-signed certificate in order for Hoverfly to intercept and decrypt HTTPS traffic.
 
 You will get an error like this if the certificate is not trusted.
 
-``
-javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
-``
+``javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target``
 
 Hoverfly sets its certificate to be trusted in the the default ``SSLContext``. If your HTTP client uses the default ``SSLContext``,
 then you don't need to do anything.
