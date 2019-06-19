@@ -4,12 +4,15 @@ Verification
 ============
 
 
-This feature lets you verify that specific requests have been made to external service endpoints. You can verify the number of repeating requests or different
-requests performed in certain order.
+This feature lets you verify that specific requests have been made to the external service endpoints.
 
-The ``verify`` method from ``HoverflyRule`` accepts the same ``RequestMatcherBuilder`` DSL that you use for creating the simulations.
+You can do request verification by calling the ``verify`` method from ``HoverflyRule``. It accepts two arguments.
+The first one is a ``RequestMatcherBuilder`` which is also used by the DSL for creating simulations. It lets you define
+your request pattern, and Hoverfly uses it to search its journal to find the matching requests. The second one is a
+``VerificationCriteria`` which defines the verification criteria, such as the number of times a request was made.
+If the criteria are omitted, Hoverfly Java expects the request to have been made exactly once.
 
-It also accepts a ``VerificationCriteria`` lambda function which is extensible. Here are some examples:
+Here are some examples:
 
 .. code-block:: java
 
@@ -36,6 +39,34 @@ There are some useful ``VerificationCriteria`` static factory methods provided o
     atLeast(2),
     atMost(2),
     never()
+
+``VerificationCriteria`` is a functional interface, meaning that you can provide your own criteria with a lambda expression. For example, you can create a more complex assertion on multiple request bodies, such as checking the transaction amount in a Charge object should keep increasing over time:
+
+.. code-block:: java
+
+    verify(service("api.payment.com").post("/v1/transactions").anyBody(),
+
+        (request, data) -> {
+
+            // Replace with your own criteria
+            data.getJournal().getEntries().stream()
+                    .sorted(comparing(JournalEntry::getTimeStarted))
+                    .map(entry -> entry.getRequest().getBody())
+                    .map(body -> {
+                        try {
+                            return new ObjectMapper().readValue(body, Charge.class);
+                        } catch (IOException e) {
+                            throw new RunTimeException();
+                        }
+                    })
+                    .reduce((c1, c2) -> {
+                        if(c1.getTransaction() > c2.getTransaction()) {
+                            throw new HoverflyVerificationError();
+                        }
+                        return c2;
+                    });
+    });
+
 
 If you want to verify all the stubbed requests were made at least once, you can use ``verifyAll``:
 
