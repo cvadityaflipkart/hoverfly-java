@@ -123,8 +123,6 @@ Alternatively, you can override the default SSL certificate by providing your ow
 
 The input to these config options should be the file path relative to the classpath. Any PEM encoded certificate and key files are supported.
 
-If the default SSL certificate is overridden, hoverfly-java will not automatically set it trusted,  and it is the users' responsibility to configure SSL context for their HTTPS client.
-
 
 Simulation Preprocessor
 -----------------------

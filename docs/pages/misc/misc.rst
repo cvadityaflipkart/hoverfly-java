@@ -44,7 +44,7 @@ If you are using `OkHttpClient <http://square.github.io/okhttp/>`_ to make HTTPS
 Spock Framework
 ---------------
 
-If you are testing with BDD and `Spock Framework <http://spockframework.org/>`_, you could also use Hoverfly-Java JUnit Rule. Just initialize a `HoverflyRule` in the Specification, and annotate it with `@ClassRule` and `@Shared` which indicates the `HoverflyRule` is shared among all the feature methods:
+If you are testing with BDD and `Spock Framework <http://spockframework.org/>`_, you could also use Hoverfly-Java JUnit Rule. Just initialize a ``HoverflyRule`` in the Specification, and annotate it with ``@ClassRule`` and ``@Shared`` which indicates the ``HoverflyRule`` is shared among all the feature methods:
 
 .. code-block:: java
 
@@ -117,4 +117,36 @@ Or with Gradle add the repository to your build.gradle file:
             url 'https://oss.sonatype.org/content/repositories/snapshots'
         }
     }
+
+
+Trusting Hoverfly certificate
+=============================
+
+Your HTTP client need to trust Hoverfly's self-signed certificate in order for Hoverfly to intercept and decrypt HTTPS traffic.
+
+You will get an error like this if the certificate is not trusted.
+
+``
+javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+``
+
+Hoverfly sets its certificate to be trusted in the the default ``SSLContext``. If your HTTP client uses the default ``SSLContext``,
+then you don't need to do anything.
+
+Otherwise, you should refer to your HTTP client documentation to find out how to customize the trusted certificates.
+
+Hoverfly provides the following methods to return the ``SSLContext`` and ``TrustManager`` if you ever need to configure your HTTP client:
+
+.. code-block:: java
+
+    hoverflyRule.getSslConfigurer().getSslContext();
+    hoverflyRule.getSslConfigurer().getTrustManager();
+
+
+As a last resort, you can still trust Hoverfly certificate by adding it to the global Java keystore:
+
+.. code-block:: bash
+
+    $ wget https://raw.githubusercontent.com/SpectoLabs/hoverfly/master/core/cert.pem
+    $ sudo $JAVA_HOME/bin/keytool -import -alias hoverfly -keystore $JAVA_HOME/jre/lib/security/cacerts -file cert.pem
 
