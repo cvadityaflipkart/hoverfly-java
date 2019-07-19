@@ -3,6 +3,7 @@ package io.specto.hoverfly.junit5.api;
 
 import io.specto.hoverfly.junit.core.SimulationPreprocessor;
 import io.specto.hoverfly.junit.core.config.LocalHoverflyConfig;
+import io.specto.hoverfly.junit.core.config.LogLevel;
 import io.specto.hoverfly.junit.core.config.RemoteHoverflyConfig;
 
 import java.lang.annotation.ElementType;
@@ -92,4 +93,9 @@ public @interface HoverflyConfig {
      * Set additional commands for starting Hoverfly
      */
     String[] commands() default {};
+
+    /**
+     * Set Hoverfly log level
+     */
+    LogLevel logLevel() default LogLevel.INFO;
 }

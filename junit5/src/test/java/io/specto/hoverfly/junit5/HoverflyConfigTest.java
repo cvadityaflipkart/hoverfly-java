@@ -4,12 +4,15 @@ import io.specto.hoverfly.junit.core.Hoverfly;
 import io.specto.hoverfly.junit.core.HoverflyMode;
 import io.specto.hoverfly.junit.core.SimulationPreprocessor;
 import io.specto.hoverfly.junit.core.config.HoverflyConfiguration;
+import io.specto.hoverfly.junit.core.config.LogLevel;
 import io.specto.hoverfly.junit.core.model.Simulation;
 import io.specto.hoverfly.junit5.api.HoverflyConfig;
 import io.specto.hoverfly.junit5.api.HoverflyCore;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,6 +43,7 @@ class HoverflyConfigTest {
             assertThat(configs.isStatefulCapture()).isFalse();
             assertThat(configs.getSimulationPreprocessor()).isEmpty();
             assertThat(configs.getCommands()).isEmpty();
+            assertThat(configs.getLogLevel()).isEqualTo(Optional.of(LogLevel.INFO));
         }
     }
 
@@ -49,7 +53,8 @@ class HoverflyConfigTest {
             plainHttpTunneling = true, disableTlsVerification = true, upstreamProxy = "localhost:5000",
             webServer = true, statefulCapture = true,
             simulationPreprocessor = CustomSimulationPreprocessor.class,
-            commands = { "-log-level", "error" }
+            commands = { "-log-level", "error" },
+            logLevel = LogLevel.DEBUG
     ))
     @ExtendWith(HoverflyExtension.class)
     class CustomizedSettings {
@@ -69,6 +74,7 @@ class HoverflyConfigTest {
             assertThat(configs.isStatefulCapture()).isTrue();
             assertThat(configs.getSimulationPreprocessor()).isPresent();
             assertThat(configs.getCommands()).containsExactly("-log-level", "error");
+            assertThat(configs.getLogLevel()).isEqualTo(Optional.of(LogLevel.DEBUG));
         }
 
     }

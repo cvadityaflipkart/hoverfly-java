@@ -31,7 +31,8 @@ class HoverflyExtensionUtils {
                 configs = localConfigs()
                         .sslCertificatePath(config.sslCertificatePath())
                         .sslKeyPath(config.sslKeyPath())
-                        .upstreamProxy(config.upstreamProxy());
+                        .upstreamProxy(config.upstreamProxy())
+                        .logLevel(config.logLevel());
                 if (config.plainHttpTunneling()) {
                     ((LocalHoverflyConfig) configs).plainHttpTunneling();
                 }

@@ -56,7 +56,7 @@ If you are developing behind a cooperate proxy, you can configure Hoverfly to us
 Logging
 -------
 Hoverfly logs to SLF4J by default, meaning that you have control of Hoverfly logs using JAVA logging framework.
-Here is an example ``logback.xml`` that directs Hoverfly WARN logs to the console:
+Here is an example ``logback.xml`` that directs Hoverfly ``WARN`` logs to the console:
 
 .. code-block:: xml
 
