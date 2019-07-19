@@ -21,7 +21,6 @@ import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Config builder interface for settings specific to {@link Hoverfly} managed internally
@@ -36,6 +35,7 @@ public class LocalHoverflyConfig extends HoverflyConfig {
     private LocalMiddleware localMiddleware;
     private String upstreamProxy;
     private Logger hoverflyLogger = LoggerFactory.getLogger("hoverfly");
+    private LogLevel logLevel;
     private List<String> commands = new LinkedList<>();
 
     /**
@@ -46,6 +46,7 @@ public class LocalHoverflyConfig extends HoverflyConfig {
      */
     public LocalHoverflyConfig sslCertificatePath(String sslCertificatePath) {
         this.sslCertificatePath = sslCertificatePath;
+
         return this;
     }
 
@@ -126,6 +127,16 @@ public class LocalHoverflyConfig extends HoverflyConfig {
     }
 
     /**
+     * Set the log level of Hoverfly. The default level is INFO.
+     * @param logLevel {@link LogLevel} to set
+     * @return the {@link HoverflyConfig} for further customizations
+     */
+    public LocalHoverflyConfig logLevel(LogLevel logLevel) {
+        this.logLevel = logLevel;
+        return this;
+    }
+
+    /**
      * Set additional commands for starting Hoverfly.
      * @param commands More Hoverfly command flags.
      * @return the {@link HoverflyConfig} for further customizations
@@ -139,7 +150,7 @@ public class LocalHoverflyConfig extends HoverflyConfig {
     @Override
     public HoverflyConfiguration build() {
         HoverflyConfiguration configs = new HoverflyConfiguration(proxyPort, adminPort, proxyLocalHost, destination,
-                proxyCaCert, captureHeaders, webServer, hoverflyLogger, statefulCapture, simulationPreprocessor);
+                proxyCaCert, captureHeaders, webServer, hoverflyLogger, logLevel, statefulCapture, simulationPreprocessor);
         configs.setSslCertificatePath(sslCertificatePath);
         configs.setSslKeyPath(sslKeyPath);
         configs.setTlsVerificationDisabled(tlsVerificationDisabled);

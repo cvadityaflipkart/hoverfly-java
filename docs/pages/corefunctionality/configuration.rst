@@ -55,8 +55,8 @@ If you are developing behind a cooperate proxy, you can configure Hoverfly to us
 
 Logging
 -------
-Hoverfly logs to SLF4J by default, meaning that you can control log level using standard logging configuration. Here is an example ``logback.xml`` that set
-Hoverfly log level to WARN:
+Hoverfly logs to SLF4J by default, meaning that you have control of Hoverfly logs using JAVA logging framework.
+Here is an example ``logback.xml`` that directs Hoverfly WARN logs to the console:
 
 .. code-block:: xml
 
@@ -74,7 +74,7 @@ Hoverfly log level to WARN:
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
         </root>
-        <logger name="hoverfly" level="WARN">
+        <logger name="hoverfly" level="WARN" additivity="false">
             <appender-ref ref="CONSOLE" />
         </logger>
 
@@ -92,6 +92,13 @@ Or change the log output directly to stdout:
 .. code-block:: java
 
     localConfigs().logToStdOut()
+
+Hoverfly by default generates ``INFO`` logs regardless of the external SLF4J logger configs. To get debug logging, you need
+to set the log level explicitly:
+
+.. code-block:: java
+
+    localConfigs().logLevel(LogLevel.DEBUG)
 
 
 Middleware

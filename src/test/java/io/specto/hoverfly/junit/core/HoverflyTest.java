@@ -13,6 +13,7 @@ import io.specto.hoverfly.junit.api.HoverflyClientException;
 import io.specto.hoverfly.junit.api.model.ModeArguments;
 import io.specto.hoverfly.junit.api.view.HoverflyInfoView;
 import io.specto.hoverfly.junit.core.config.LocalHoverflyConfig;
+import io.specto.hoverfly.junit.core.config.LogLevel;
 import io.specto.hoverfly.junit.core.model.DelaySettings;
 import io.specto.hoverfly.junit.core.model.RequestFieldMatcher;
 import io.specto.hoverfly.junit.core.model.RequestResponsePair;
@@ -30,6 +31,9 @@ import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import org.zeroturnaround.exec.StartedProcess;
 
 import javax.net.ssl.SSLContext;
@@ -64,6 +68,22 @@ public class HoverflyTest {
         hoverfly.start();
         assertThat(System.getProperty("http.proxyPort")).isEqualTo(String.valueOf(EXPECTED_PROXY_PORT));
         assertThat(hoverfly.getHoverflyConfig().getProxyPort()).isEqualTo(EXPECTED_PROXY_PORT);
+    }
+
+    @Test
+    public void shouldSetDebugLogging() {
+        systemOut.enableLog();
+        hoverfly = new Hoverfly(localConfigs().logToStdOut().logLevel(LogLevel.DEBUG), SIMULATE);
+        hoverfly.start();
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        try {
+            restTemplate.getForEntity("https://test.api", Void.class);
+        } catch (RestClientException ignored) {
+        }
+
+        assertThat(systemOut.getLogWithNormalizedLineSeparator()).contains("Checking cache for request");
     }
 
     @Test

@@ -209,6 +209,10 @@ public class Hoverfly implements AutoCloseable {
             commands.add("json");
         }
 
+        if (hoverflyConfig.getLogLevel().isPresent()) {
+            commands.add("-log-level");
+            commands.add(hoverflyConfig.getLogLevel().get().name().toLowerCase());
+        }
 
         if (hoverflyConfig.isMiddlewareEnabled()) {
             final String path = hoverflyConfig.getLocalMiddleware().getPath();

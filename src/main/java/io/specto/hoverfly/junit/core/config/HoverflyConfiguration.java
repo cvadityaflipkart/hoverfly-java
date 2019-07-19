@@ -34,6 +34,7 @@ public class HoverflyConfiguration {
     private boolean plainHttpTunneling;
     private String upstreamProxy;
     private Logger hoverflyLogger;
+    private LogLevel logLevel;
     private boolean statefulCapture;
     private SimulationPreprocessor simulationPreprocessor;
     private String binaryNameFormat;
@@ -55,7 +56,7 @@ public class HoverflyConfiguration {
                           final boolean webServer,
                           final boolean statefulCapture,
                           final SimulationPreprocessor preprocessor) {
-        this(proxyPort, adminPort, proxyLocalHost, destination, proxyCaCertificate, captureHeaders, webServer, null, statefulCapture, preprocessor);
+        this(proxyPort, adminPort, proxyLocalHost, destination, proxyCaCertificate, captureHeaders, webServer, null, null, statefulCapture, preprocessor);
         setScheme(scheme);
         setHost(host);
         this.authToken = authToken;
@@ -74,6 +75,7 @@ public class HoverflyConfiguration {
                           final List<String> captureHeaders,
                           final boolean webServer,
                           final Logger hoverflyLogger,
+                          final LogLevel logLevel,
                           final boolean statefulCapture,
                           final SimulationPreprocessor preprocessor
     ) {
@@ -85,6 +87,7 @@ public class HoverflyConfiguration {
         this.captureHeaders = captureHeaders;
         this.webServer = webServer;
         this.hoverflyLogger = hoverflyLogger;
+        this.logLevel = logLevel;
         this.statefulCapture = statefulCapture;
         this.simulationPreprocessor = preprocessor;
     }
@@ -237,6 +240,10 @@ public class HoverflyConfiguration {
 
     public Optional<Logger> getHoverflyLogger() {
         return Optional.ofNullable(hoverflyLogger);
+    }
+
+    public Optional<LogLevel> getLogLevel() {
+        return Optional.ofNullable(logLevel);
     }
 
     public boolean isStatefulCapture() {

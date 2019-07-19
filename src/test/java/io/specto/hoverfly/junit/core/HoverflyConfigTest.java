@@ -2,9 +2,13 @@ package io.specto.hoverfly.junit.core;
 
 import io.specto.hoverfly.junit.core.config.HoverflyConfiguration;
 import java.net.InetSocketAddress;
+import java.util.Optional;
+
+import io.specto.hoverfly.junit.core.config.LogLevel;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.EnvironmentVariables;
+import org.slf4j.LoggerFactory;
 
 import static io.specto.hoverfly.junit.core.HoverflyConfig.localConfigs;
 import static io.specto.hoverfly.junit.core.HoverflyConfig.remoteConfigs;
@@ -35,6 +39,8 @@ public class HoverflyConfigTest {
         assertThat(configs.isWebServer()).isFalse();
         assertThat(configs.isTlsVerificationDisabled()).isFalse();
         assertThat(configs.isStatefulCapture()).isFalse();
+        assertThat(configs.getLogLevel()).isNotPresent();
+        assertThat(configs.getHoverflyLogger()).isEqualTo(Optional.of(LoggerFactory.getLogger("hoverfly")));
     }
 
     @Test
@@ -172,5 +178,12 @@ public class HoverflyConfigTest {
                 .addCommands("-generate-ca-cert").build();
 
         assertThat(configs.getCommands()).containsExactly("-log-level", "error", "-disable-cache", "-generate-ca-cert");
+    }
+
+    @Test
+    public void shouldSetLogLevel() {
+        HoverflyConfiguration configs = localConfigs().logLevel(LogLevel.DEBUG).build();
+
+        assertThat(configs.getLogLevel()).isEqualTo(Optional.of(LogLevel.DEBUG));
     }
 }
