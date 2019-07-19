@@ -61,7 +61,7 @@ class HoverflyRuleUtils {
         boolean isRule = false;
         Field[] fields = description.getTestClass().getFields();
         for (Field field : fields) {
-            if (field.getType().isAssignableFrom(HoverflyRule.class) && field.getAnnotation(Rule.class) != null) {
+            if (field.getType().equals(HoverflyRule.class) && field.getAnnotation(Rule.class) != null) {
                 isRule = true;
                 break;
             }
