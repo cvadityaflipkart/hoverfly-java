@@ -1,0 +1,36 @@
+{
+  "journal": [
+    {
+      "request": {
+        "requestType": null,
+        "path": "/",
+        "method": "GET",
+        "destination": "hoverfly.io",
+        "scheme": "http",
+        "query": "",
+        "body": "",
+        "headers": {
+          "Accept": [
+            "*/*"
+          ],
+          "User-Agent": [
+            "curl/7.49.1"
+          ]
+        }
+      },
+      "response": {
+        "status": 502,
+        "body": "Hoverfly Error!\n\nThere was an error when matching\n\nGot error: Could not find a match for request, create or record a valid matcher first!",
+        "encodedBody": false,
+        "headers": {
+          "Content-Type": [
+            "text/plain"
+          ]
+        }
+      },
+      "mode": "simulate",
+      "timeStarted": "2017-06-22T13:18:08.050+01:00",
+      "latency": 2
+    }
+  ]
+}

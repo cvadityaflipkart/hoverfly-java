@@ -1,0 +1,63 @@
+{
+  "data" : {
+    "pairs" : [ {
+      "request" : {
+        "path" : [ {
+          "matcher" : "exact",
+          "value" : ""
+        } ],
+        "method" : [ {
+          "matcher" : "exact",
+          "value" : "GET"
+        } ],
+        "destination" : [ {
+          "matcher" : "exact",
+          "value" : "localhost:51604"
+        } ],
+        "scheme" : [ {
+          "matcher" : "exact",
+          "value" : "http"
+        } ],
+        "body" : [ {
+          "matcher" : "exact",
+          "value" : ""
+        } ],
+        "headers" : {
+          "Accept" : [ {
+            "matcher" : "exact",
+            "value" : "text/plain, application/xml, text/xml, application/json, application/*+xml, application/*+json, */*"
+          } ],
+          "Proxy-Connection" : [ {
+            "matcher" : "exact",
+            "value" : "keep-alive"
+          } ],
+          "User-Agent" : [ {
+            "matcher" : "exact",
+            "value" : "Java/1.8.0_202"
+          } ]
+        }
+      },
+      "response" : {
+        "status" : 200,
+        "body" : "<h1>Hello World</h1>\n",
+        "encodedBody" : false,
+        "templated" : false,
+        "headers" : {
+          "Content-Length" : [ "21" ],
+          "Content-Type" : [ "text/html;charset=utf-8" ],
+          "Date" : [ "Thu, 13 Feb 2020 08:43:38 GMT" ],
+          "Hoverfly" : [ "Was-Here" ],
+          "Server" : [ "Jetty(9.3.11.v20160721)" ]
+        }
+      }
+    } ],
+    "globalActions" : {
+      "delays" : [ ]
+    }
+  },
+  "meta" : {
+    "schemaVersion" : "v5",
+    "hoverflyVersion" : "v1.1.4",
+    "timeExported" : "2020-02-13T14:13:38+05:30"
+  }
+}
