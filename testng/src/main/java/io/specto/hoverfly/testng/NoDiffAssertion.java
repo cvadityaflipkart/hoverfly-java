@@ -23,7 +23,7 @@ import io.specto.hoverfly.junit.core.HoverflyMode;
 public class NoDiffAssertion {
 
     private Hoverfly hoverfly;
-    private HoverflyExtension hoverflyExtension;
+    private HoverflyTestNG hoverflyTestNG;
 
     /**
      * Creates a rule with the given instance of {@link Hoverfly} that asserts that there was no diff between any of the
@@ -41,18 +41,18 @@ public class NoDiffAssertion {
     }
 
     /**
-     * Creates a rule with the given instance of {@link HoverflyExtension} that asserts that there was no diff between any of the
+     * Creates a rule with the given instance of {@link HoverflyTestNG} that asserts that there was no diff between any of the
      * expected responses set by simulations and the actual responses returned from the real service.
      * The rule also removes (before and after the test execution) all possible diffs that are stored in Hoverfly.
      * This ensures that all test runs are executed in isolated and clean environment.
      *
-     * @param hoverflyExtension An instance of {@link HoverflyExtension} to be used for retrieving the diffs
+     * @param hoverflyTestNG An instance of {@link HoverflyTestNG} to be used for retrieving the diffs
      */
-    public NoDiffAssertion(HoverflyExtension hoverflyExtension) {
-        if (hoverflyExtension == null) {
+    public NoDiffAssertion(HoverflyTestNG hoverflyTestNG) {
+        if (hoverflyTestNG == null) {
             throw new IllegalArgumentException("HoverflyRule cannot be null");
         }
-        this.hoverflyExtension = hoverflyExtension;
+        this.hoverflyTestNG = hoverflyTestNG;
     }
 
     /**
@@ -74,7 +74,7 @@ public class NoDiffAssertion {
         if (hoverfly != null) {
             hoverfly.resetDiffs();
         } else {
-            hoverflyExtension.resetDiffs();
+            hoverflyTestNG.resetDiffs();
         }
     }
 
@@ -82,7 +82,7 @@ public class NoDiffAssertion {
         if (hoverfly != null) {
             hoverfly.assertThatNoDiffIsReported(true);
         } else {
-            hoverflyExtension.assertThatNoDiffIsReported();
+            hoverflyTestNG.assertThatNoDiffIsReported();
         }
     }
 }

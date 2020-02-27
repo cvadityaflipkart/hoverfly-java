@@ -3,8 +3,8 @@ package io.specto.hoverfly.testng;
 import com.google.common.collect.ImmutableList;
 import io.specto.hoverfly.junit.core.HoverflyConfig;
 import io.specto.hoverfly.junit.dsl.matchers.HoverflyMatchers;
-import io.specto.hoverfly.testng.api.TestNgClassRule;
-import io.specto.hoverfly.testng.api.TestNgRule;
+import io.specto.hoverfly.testng.api.TestNGClassRule;
+import io.specto.hoverfly.testng.api.TestNGRule;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -24,11 +24,11 @@ import static io.specto.hoverfly.junit.dsl.HttpBodyConverter.json;
 import static io.specto.hoverfly.junit.dsl.ResponseCreators.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Listeners(HoverflyListener.class)
+@Listeners(HoverflyExecutor.class)
 public class StatefulCaptureTest {
 
-    @TestNgClassRule
-    public static HoverflyExtension hoverflyExtensionForSimulation = HoverflyExtension.inSimulationMode(dsl(
+    @TestNGClassRule
+    public static HoverflyTestNG hoverflyTestNGForSimulation = HoverflyTestNG.inSimulationMode(dsl(
             service(HoverflyMatchers.contains("localhost"))
                     .get("/items")
                     .willReturn(success(json(new ToDoList(ImmutableList.of("book flight")))))
@@ -46,15 +46,15 @@ public class StatefulCaptureTest {
     ), HoverflyConfig.localConfigs().proxyPort(51322).asWebServer()).printSimulationData();
 
 
-    @TestNgRule
-    public HoverflyExtension hoverflyExtension = HoverflyExtension.inCaptureOrSimulationMode("stateful-capture.json", HoverflyConfig.localConfigs().proxyLocalHost().enableStatefulCapture());
+    @TestNGRule
+    public HoverflyTestNG hoverflyTestNG = HoverflyTestNG.inCaptureOrSimulationMode("stateful-capture.json", HoverflyConfig.localConfigs().proxyLocalHost().enableStatefulCapture());
 
     private final RestTemplate restTemplate = new RestTemplate();
     private String todoApi;
 
     @BeforeMethod
     public void setup() {
-        todoApi = "http://localhost:" + hoverflyExtensionForSimulation.getProxyPort() + "/items";
+        todoApi = "http://localhost:" + hoverflyTestNGForSimulation.getProxyPort() + "/items";
     }
 
     @Test

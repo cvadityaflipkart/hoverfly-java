@@ -1,6 +1,6 @@
 package io.specto.hoverfly.testng;
 
-import io.specto.hoverfly.testng.api.TestNgClassRule;
+import io.specto.hoverfly.testng.api.TestNGClassRule;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.testng.annotations.Listeners;
@@ -11,14 +11,14 @@ import static io.specto.hoverfly.junit.core.SimulationSource.classpath;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.OK;
 
-@Listeners(HoverflyListener.class)
+@Listeners(HoverflyExecutor.class)
 public class HoverflyRulePortConfigurationTest {
 
     private static final int EXPECTED_ADMIN_PORT = 8889;
     private static final int EXPECTED_PROXY_PORT = 8890;
 
-    @TestNgClassRule
-    public static HoverflyExtension hoverflyExtension = HoverflyExtension.inSimulationMode(classpath("test-service.json"),
+    @TestNGClassRule
+    public static HoverflyTestNG hoverflyTestNG = HoverflyTestNG.inSimulationMode(classpath("test-service.json"),
         localConfigs().proxyPort(EXPECTED_PROXY_PORT).adminPort(EXPECTED_ADMIN_PORT));
 
     private RestTemplate restTemplate = new RestTemplate();
@@ -41,7 +41,7 @@ public class HoverflyRulePortConfigurationTest {
     @Test
     public void shouldBeAbleToGetPort() {
         // Then
-        assertThat(hoverflyExtension.getProxyPort()).isEqualTo(EXPECTED_PROXY_PORT);
+        assertThat(hoverflyTestNG.getProxyPort()).isEqualTo(EXPECTED_PROXY_PORT);
     }
 
 

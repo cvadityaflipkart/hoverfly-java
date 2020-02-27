@@ -29,9 +29,9 @@ import static io.specto.hoverfly.junit.core.HoverflyConfig.localConfigs;
 import static io.specto.hoverfly.junit.core.HoverflyConstants.DEFAULT_HOVERFLY_EXPORT_PATH;
 import static io.specto.hoverfly.junit.core.HoverflyMode.*;
 import static io.specto.hoverfly.junit.core.SimulationSource.file;
-import static io.specto.hoverfly.testng.HoverflyExtensionUtils.*;
+import static io.specto.hoverfly.testng.HoverflyTestNGUtils.*;
 
-public class HoverflyExtension {
+public class HoverflyTestNG {
 
     private final Hoverfly hoverfly;
     private final HoverflyMode hoverflyMode;
@@ -39,7 +39,7 @@ public class HoverflyExtension {
     private List<SimulationSource> simulationSources = new ArrayList<>();
     private boolean enableSimulationPrint;
 
-    private HoverflyExtension(HoverflyMode hoverflyMode, final SimulationSource simulationSource, final HoverflyConfig hoverflyConfig) {
+    private HoverflyTestNG(HoverflyMode hoverflyMode, final SimulationSource simulationSource, final HoverflyConfig hoverflyConfig) {
         this.hoverflyMode = hoverflyMode;
         this.hoverfly = new Hoverfly(hoverflyConfig, hoverflyMode);
         if (simulationSource != null) {
@@ -47,7 +47,7 @@ public class HoverflyExtension {
         }
     }
 
-    private HoverflyExtension(final Path capturePath, final HoverflyConfig hoverflyConfig) {
+    private HoverflyTestNG(final Path capturePath, final HoverflyConfig hoverflyConfig) {
         this.hoverflyMode = CAPTURE;
         this.hoverfly = new Hoverfly(hoverflyConfig, hoverflyMode);
         this.capturePath = capturePath;
@@ -60,7 +60,7 @@ public class HoverflyExtension {
      * @param recordFile the path where captured or simulated traffic is taken. Relative to src/test/resources/hoverfly
      * @return the rule
      */
-    public static HoverflyExtension inCaptureOrSimulationMode(String recordFile) {
+    public static HoverflyTestNG inCaptureOrSimulationMode(String recordFile) {
         return inCaptureOrSimulationMode(recordFile, localConfigs());
     }
 
@@ -72,7 +72,7 @@ public class HoverflyExtension {
      * @param hoverflyConfig the config
      * @return the rule
      */
-    public static HoverflyExtension inCaptureOrSimulationMode(String recordFile, HoverflyConfig hoverflyConfig) {
+    public static HoverflyTestNG inCaptureOrSimulationMode(String recordFile, HoverflyConfig hoverflyConfig) {
         Path path = fileRelativeToTestResourcesHoverfly(recordFile);
         if (Files.isReadable(path)) {
             return inSimulationMode(file(path), hoverflyConfig);
@@ -81,12 +81,12 @@ public class HoverflyExtension {
         }
     }
 
-    public static HoverflyExtension inCaptureMode() {
+    public static HoverflyTestNG inCaptureMode() {
         return inCaptureMode(localConfigs());
     }
 
-    public static HoverflyExtension inCaptureMode(HoverflyConfig hoverflyConfig) {
-        return new HoverflyExtension(null, hoverflyConfig);
+    public static HoverflyTestNG inCaptureMode(HoverflyConfig hoverflyConfig) {
+        return new HoverflyTestNG(null, hoverflyConfig);
     }
 
     /**
@@ -95,7 +95,7 @@ public class HoverflyExtension {
      * @param outputFilename the output simulation file name relative to src/test/resources/hoverfly
      * @return the rule
      */
-    public static HoverflyExtension inCaptureMode(String outputFilename) {
+    public static HoverflyTestNG inCaptureMode(String outputFilename) {
         return inCaptureMode(outputFilename, localConfigs());
     }
 
@@ -106,7 +106,7 @@ public class HoverflyExtension {
      * @param hoverflyConfig the config
      * @return the rule
      */
-    public static HoverflyExtension inCaptureMode(String outputFilename, HoverflyConfig hoverflyConfig) {
+    public static HoverflyTestNG inCaptureMode(String outputFilename, HoverflyConfig hoverflyConfig) {
         return inCaptureMode(DEFAULT_HOVERFLY_EXPORT_PATH, outputFilename, hoverflyConfig);
     }
 
@@ -117,7 +117,7 @@ public class HoverflyExtension {
      * @param outputFilename the output simulation file name
      * @return the rule
      */
-    public static HoverflyExtension inCaptureMode(String outputDir, String outputFilename) {
+    public static HoverflyTestNG inCaptureMode(String outputDir, String outputFilename) {
         return inCaptureMode(outputDir, outputFilename, localConfigs());
     }
 
@@ -129,12 +129,12 @@ public class HoverflyExtension {
      * @param hoverflyConfig the config
      * @return the rule
      */
-    public static HoverflyExtension inCaptureMode(String outputDir, String outputFilename, HoverflyConfig hoverflyConfig) {
+    public static HoverflyTestNG inCaptureMode(String outputDir, String outputFilename, HoverflyConfig hoverflyConfig) {
         if (StringUtils.isBlank(outputFilename)) {
             throw new IllegalArgumentException("Output simulation file name can not be blank.");
         }
         Path exportPath = createDirectoryIfNotExist(outputDir);
-        return new HoverflyExtension(exportPath.resolve(outputFilename), hoverflyConfig);
+        return new HoverflyTestNG(exportPath.resolve(outputFilename), hoverflyConfig);
     }
 
 
@@ -143,7 +143,7 @@ public class HoverflyExtension {
      *
      * @return the rule
      */
-    public static HoverflyExtension inSimulationMode() {
+    public static HoverflyTestNG inSimulationMode() {
         return inSimulationMode(localConfigs());
     }
 
@@ -153,7 +153,7 @@ public class HoverflyExtension {
      * @param hoverflyConfig the config
      * @return the rule
      */
-    public static HoverflyExtension inSimulationMode(final HoverflyConfig hoverflyConfig) {
+    public static HoverflyTestNG inSimulationMode(final HoverflyConfig hoverflyConfig) {
         return inSimulationMode(null, hoverflyConfig);
     }
 
@@ -163,12 +163,12 @@ public class HoverflyExtension {
      * @param simulationSource the simulation to import
      * @return the rule
      */
-    public static HoverflyExtension inSimulationMode(final SimulationSource simulationSource) {
+    public static HoverflyTestNG inSimulationMode(final SimulationSource simulationSource) {
         return inSimulationMode(simulationSource, localConfigs());
     }
 
-    public static HoverflyExtension inSimulationMode(final SimulationSource simulationSource, final HoverflyConfig hoverflyConfig) {
-        return new HoverflyExtension(SIMULATE, simulationSource, hoverflyConfig);
+    public static HoverflyTestNG inSimulationMode(final SimulationSource simulationSource, final HoverflyConfig hoverflyConfig) {
+        return new HoverflyTestNG(SIMULATE, simulationSource, hoverflyConfig);
     }
 
     /**
@@ -176,7 +176,7 @@ public class HoverflyExtension {
      *
      * @return the rule
      */
-    public static HoverflyExtension inSpyMode() {
+    public static HoverflyTestNG inSpyMode() {
         return inSpyMode(localConfigs());
     }
 
@@ -186,7 +186,7 @@ public class HoverflyExtension {
      * @param hoverflyConfig the config
      * @return the rule
      */
-    public static HoverflyExtension inSpyMode(final HoverflyConfig hoverflyConfig) {
+    public static HoverflyTestNG inSpyMode(final HoverflyConfig hoverflyConfig) {
         return inSpyMode(null, hoverflyConfig);
     }
 
@@ -196,12 +196,12 @@ public class HoverflyExtension {
      * @param simulationSource the simulation to import
      * @return the rule
      */
-    public static HoverflyExtension inSpyMode(final SimulationSource simulationSource) {
+    public static HoverflyTestNG inSpyMode(final SimulationSource simulationSource) {
         return inSpyMode(simulationSource, localConfigs());
     }
 
-    public static HoverflyExtension inSpyMode(final SimulationSource simulationSource, final HoverflyConfig hoverflyConfig) {
-        return new HoverflyExtension(SPY, simulationSource, hoverflyConfig);
+    public static HoverflyTestNG inSpyMode(final SimulationSource simulationSource, final HoverflyConfig hoverflyConfig) {
+        return new HoverflyTestNG(SPY, simulationSource, hoverflyConfig);
     }
 
 
@@ -210,7 +210,7 @@ public class HoverflyExtension {
      *
      * @return the rule
      */
-    public static HoverflyExtension inDiffMode() {
+    public static HoverflyTestNG inDiffMode() {
         return inDiffMode(localConfigs());
     }
 
@@ -220,7 +220,7 @@ public class HoverflyExtension {
      * @param hoverflyConfig the config
      * @return the rule
      */
-    public static HoverflyExtension inDiffMode(final HoverflyConfig hoverflyConfig) {
+    public static HoverflyTestNG inDiffMode(final HoverflyConfig hoverflyConfig) {
         return inDiffMode(null, hoverflyConfig);
     }
 
@@ -230,7 +230,7 @@ public class HoverflyExtension {
      * @param simulationSource the simulation to import the responses will be compared to
      * @return the rule
      */
-    public static HoverflyExtension inDiffMode(final SimulationSource simulationSource) {
+    public static HoverflyTestNG inDiffMode(final SimulationSource simulationSource) {
         return inDiffMode(simulationSource, localConfigs());
     }
 
@@ -241,8 +241,8 @@ public class HoverflyExtension {
      * @param hoverflyConfig   the config
      * @return the rule
      */
-    public static HoverflyExtension inDiffMode(final SimulationSource simulationSource, final HoverflyConfig hoverflyConfig) {
-        return new HoverflyExtension(DIFF, simulationSource, hoverflyConfig);
+    public static HoverflyTestNG inDiffMode(final SimulationSource simulationSource, final HoverflyConfig hoverflyConfig) {
+        return new HoverflyTestNG(DIFF, simulationSource, hoverflyConfig);
     }
 
     /**
@@ -368,7 +368,7 @@ public class HoverflyExtension {
      *
      * @return this HoverflyRule
      */
-    public HoverflyExtension printSimulationData() {
+    public HoverflyTestNG printSimulationData() {
         enableSimulationPrint = true;
         return this;
     }
@@ -452,7 +452,7 @@ public class HoverflyExtension {
 
     private void checkMode(Predicate<HoverflyMode> condition) {
         if (!condition.test(hoverflyMode)) {
-            throw new HoverflyExtension.HoverflyTestNgException(hoverflyMode.name() + " mode does not support this operation.");
+            throw new HoverflyTestNG.HoverflyTestNgException(hoverflyMode.name() + " mode does not support this operation.");
         }
     }
 

@@ -1,6 +1,6 @@
 package io.specto.hoverfly.testng;
 
-import io.specto.hoverfly.testng.api.TestNgClassRule;
+import io.specto.hoverfly.testng.api.TestNGClassRule;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +19,11 @@ import static io.specto.hoverfly.junit.dsl.ResponseCreators.success;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-@Listeners(HoverflyListener.class)
+@Listeners(HoverflyExecutor.class)
 public class LocalMiddlewareTest {
 
-    @TestNgClassRule
-    public static HoverflyExtension hoverflyExtension = HoverflyExtension.inSimulationMode(dsl(
+    @TestNGClassRule
+    public static HoverflyTestNG hoverflyTestNG = HoverflyTestNG.inSimulationMode(dsl(
             service("www.other-anotherservice.com")
                     .put("/api/bookings/1").body("{\"flightId\": \"1\", \"class\": \"PREMIUM\"}")
                     .willReturn(success())),

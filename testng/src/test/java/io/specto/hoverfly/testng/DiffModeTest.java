@@ -1,6 +1,6 @@
 package io.specto.hoverfly.testng;
 
-import io.specto.hoverfly.testng.api.TestNgClassRule;
+import io.specto.hoverfly.testng.api.TestNGClassRule;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Assume;
@@ -24,13 +24,13 @@ import static io.specto.hoverfly.junit.dsl.HoverflyDsl.service;
 import static io.specto.hoverfly.junit.dsl.ResponseCreators.success;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Listeners(HoverflyListener.class)
+@Listeners(HoverflyExecutor.class)
 public class DiffModeTest {
 
     private static final int ADMIN_PROXY_PORT = 54321;
 
-    @TestNgClassRule
-    private static HoverflyExtension hoverflyExtension = HoverflyExtension.inDiffMode(dsl(
+    @TestNGClassRule
+    private static HoverflyTestNG hoverflyTestNG = HoverflyTestNG.inDiffMode(dsl(
             service("http://localhost:" + ADMIN_PROXY_PORT)
                     .get("/api/v2/state")
                     .willReturn(success().body("expected message")),
@@ -65,7 +65,7 @@ public class DiffModeTest {
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        hoverflyExtension.assertThatNoDiffIsReported();
+        hoverflyTestNG.assertThatNoDiffIsReported();
     }
 
     @Test
@@ -82,13 +82,13 @@ public class DiffModeTest {
         verifyExceptionThrownByDiffAssertion(true);
 
         // then
-        hoverflyExtension.assertThatNoDiffIsReported();
+        hoverflyTestNG.assertThatNoDiffIsReported();
     }
 
     @Test
     public void diffAssertionRuleShouldResetAllRecordedDiffs() {
         verifyExceptionThrownByDiffAssertionRule(true, "assertStateApi");
-        hoverflyExtension.assertThatNoDiffIsReported();
+        hoverflyTestNG.assertThatNoDiffIsReported();
     }
 
     @Test
@@ -97,10 +97,10 @@ public class DiffModeTest {
         restTemplate.getForEntity(String.format("http://localhost:%s/api/v2/state", ADMIN_PROXY_PORT), Void.class);
 
         // when
-        hoverflyExtension.resetDiffs();
+        hoverflyTestNG.resetDiffs();
 
         // then
-        hoverflyExtension.assertThatNoDiffIsReported();
+        hoverflyTestNG.assertThatNoDiffIsReported();
     }
 
     @Test
@@ -117,7 +117,7 @@ public class DiffModeTest {
 
     private void verifyExceptionThrownByDiffAssertion(boolean shouldReset) {
         try {
-            hoverflyExtension.assertThatNoDiffIsReported(shouldReset);
+            hoverflyTestNG.assertThatNoDiffIsReported(shouldReset);
         } catch (Throwable t) {
             verifyExceptionAssertionErrorWithDiff(t);
             return;
@@ -152,7 +152,7 @@ public class DiffModeTest {
 
     public static class NoDiffAssertionTest {
 
-        public NoDiffAssertion noDiffAssertion = new NoDiffAssertion(hoverflyExtension);
+        public NoDiffAssertion noDiffAssertion = new NoDiffAssertion(hoverflyTestNG);
 
         private final RestTemplate restTemplate = new RestTemplate();
 

@@ -10,19 +10,14 @@
  * <p>
  * Copyright 2016-2016 SpectoLabs Ltd.
  */
-package io.specto.hoverfly.testng;
+package io.specto.hoverfly.testng.api;
 
-import org.testng.IInvokedMethod;
-import org.testng.ITestResult;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class HoverflyListener implements IHoverflyClassListener, IHoverflyMethodListener {
-    @Override
-    public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
-
-    }
-
-    @Override
-    public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
-
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.METHOD})
+public @interface TestNGRule {
 }

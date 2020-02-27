@@ -10,7 +10,7 @@ public class CaptureOrSimulationModeTest {
     @Test
     public void shouldInstantiateHoverflyInCaptureModeInCaseOfNoRecord() {
 
-        final HoverflyExtension hoverflyRule = HoverflyExtension.inCaptureOrSimulationMode("mynewservicerecord.json");
+        final HoverflyTestNG hoverflyRule = HoverflyTestNG.inCaptureOrSimulationMode("mynewservicerecord.json");
 
         assertThat(hoverflyRule.getHoverflyMode()).isEqualTo(HoverflyMode.CAPTURE);
 
@@ -19,7 +19,7 @@ public class CaptureOrSimulationModeTest {
     @Test
     public void shouldInstantiateHoverflyInSimulationModeInCaseOfPreviousRecord() {
 
-        final HoverflyExtension hoverflyRule = HoverflyExtension.inCaptureOrSimulationMode("test-service-below-hoverfly-dir.json");
+        final HoverflyTestNG hoverflyRule = HoverflyTestNG.inCaptureOrSimulationMode("test-service-below-hoverfly-dir.json");
 
         assertThat(hoverflyRule.getHoverflyMode()).isEqualTo(HoverflyMode.SIMULATE);
     }

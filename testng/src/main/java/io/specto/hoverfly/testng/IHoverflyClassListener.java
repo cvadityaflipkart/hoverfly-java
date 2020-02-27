@@ -15,15 +15,15 @@ package io.specto.hoverfly.testng;
 import org.testng.IClassListener;
 import org.testng.ITestClass;
 
-import static io.specto.hoverfly.testng.HoverflyExtensionUtils.isAnnotatedWithHoverflyExtension;
+import static io.specto.hoverfly.testng.HoverflyTestNGUtils.isAnnotatedWithHoverflyExtension;
 
 public interface IHoverflyClassListener extends IClassListener {
     @Override
     default void onBeforeClass(ITestClass testClass) {
         try {
-            HoverflyExtension hoverflyExtension;
-            if ((hoverflyExtension = isAnnotatedWithHoverflyExtension(testClass)) != null) {
-                hoverflyExtension.before();
+            HoverflyTestNG hoverflyTestNG;
+            if ((hoverflyTestNG = isAnnotatedWithHoverflyExtension(testClass)) != null) {
+                hoverflyTestNG.before();
             }
         } catch (IllegalAccessException e) {
             throw new IllegalStateException("IHoverflyClassListener:", e);
@@ -33,9 +33,9 @@ public interface IHoverflyClassListener extends IClassListener {
     @Override
     default void onAfterClass(ITestClass testClass) {
         try {
-            HoverflyExtension hoverflyExtension;
-            if ((hoverflyExtension = isAnnotatedWithHoverflyExtension(testClass)) != null) {
-                hoverflyExtension.after();
+            HoverflyTestNG hoverflyTestNG;
+            if ((hoverflyTestNG = isAnnotatedWithHoverflyExtension(testClass)) != null) {
+                hoverflyTestNG.after();
             }
         } catch (IllegalAccessException e) {
             throw new IllegalStateException("IHoverflyClassListener:", e);

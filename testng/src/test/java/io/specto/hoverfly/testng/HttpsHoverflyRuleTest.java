@@ -1,6 +1,6 @@
 package io.specto.hoverfly.testng;
 
-import io.specto.hoverfly.testng.api.TestNgClassRule;
+import io.specto.hoverfly.testng.api.TestNGClassRule;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.testng.annotations.Listeners;
@@ -12,11 +12,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.OK;
 
 
-@Listeners(HoverflyListener.class)
+@Listeners(HoverflyExecutor.class)
 public class HttpsHoverflyRuleTest {
 
-    @TestNgClassRule
-    public static HoverflyExtension hoverflyExtension = HoverflyExtension.inSimulationMode();
+    @TestNGClassRule
+    public static HoverflyTestNG hoverflyTestNG = HoverflyTestNG.inSimulationMode();
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -24,7 +24,7 @@ public class HttpsHoverflyRuleTest {
     public void shouldBeAbleToGetABookingUsingHttps() {
 
         //Given
-        hoverflyExtension.simulate(classpath("test-service.json"));
+        hoverflyTestNG.simulate(classpath("test-service.json"));
 
         // When
         final ResponseEntity<String> getBookingResponse = restTemplate.getForEntity("https://www.my-test.com/api/bookings/1", String.class);
@@ -43,7 +43,7 @@ public class HttpsHoverflyRuleTest {
     @Test
     public void shouldWorkWithRestTemplateWhenHttpsResponseDoesNotContainBodyOrHeaderInTheSimulation() {
         //Given
-        hoverflyExtension.simulate(classpath("simulations/v5-simulation-without-response-body.json"));
+        hoverflyTestNG.simulate(classpath("simulations/v5-simulation-without-response-body.json"));
 
         // When
         final ResponseEntity<String> firstResponse = restTemplate.getForEntity("https://www.my-test.com/api/bookings/1", String.class);

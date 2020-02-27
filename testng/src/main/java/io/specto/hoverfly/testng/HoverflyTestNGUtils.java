@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.specto.hoverfly.junit.core.model.Simulation;
 import io.specto.hoverfly.junit.rule.HoverflyRule;
-import io.specto.hoverfly.testng.api.TestNgClassRule;
-import io.specto.hoverfly.testng.api.TestNgRule;
+import io.specto.hoverfly.testng.api.TestNGClassRule;
+import io.specto.hoverfly.testng.api.TestNGRule;
 import org.testng.IInvokedMethod;
 import org.testng.ITestClass;
 
@@ -33,7 +33,7 @@ import static io.specto.hoverfly.junit.core.HoverflyConstants.DEFAULT_HOVERFLY_E
 /**
  * Utility methods for {@link HoverflyRule}
  */
-class HoverflyExtensionUtils {
+class HoverflyTestNGUtils {
 
     private static final ObjectWriter JSON_PRETTY_PRINTER = new ObjectMapper().writerWithDefaultPrettyPrinter();
 
@@ -66,41 +66,41 @@ class HoverflyExtensionUtils {
             System.out.println("The following simulation is imported to Hoverfly: \n"
                     + JSON_PRETTY_PRINTER.writeValueAsString(value));
         } catch (Exception e) {
-            throw new HoverflyExtension.HoverflyTestNgException("Failed to print simulation data: " + e.getMessage());
+            throw new HoverflyTestNG.HoverflyTestNgException("Failed to print simulation data: " + e.getMessage());
         }
     }
 
-    public static HoverflyExtension isAnnotatedWithHoverflyExtension(ITestClass iTestClass) throws IllegalAccessException {
-        HoverflyExtension hoverflyExtension = null;
+    public static HoverflyTestNG isAnnotatedWithHoverflyExtension(ITestClass iTestClass) throws IllegalAccessException {
+        HoverflyTestNG hoverflyTestNG = null;
         Class testClass = iTestClass.getRealClass();
         Field[] fields = testClass.getDeclaredFields();
         for (Field field : fields) {
-            if (field.getType().equals(HoverflyExtension.class)
-                    && field.getAnnotation(TestNgClassRule.class) != null) {
+            if (field.getType().equals(HoverflyTestNG.class)
+                    && field.getAnnotation(TestNGClassRule.class) != null) {
                 field.setAccessible(true);
                 if (Modifier.isStatic(field.getModifiers())) {
-                    hoverflyExtension = (HoverflyExtension) field.get(null);
+                    hoverflyTestNG = (HoverflyTestNG) field.get(null);
                 }
             }
         }
-        return hoverflyExtension;
+        return hoverflyTestNG;
     }
 
-    public static HoverflyExtension isAnnotatedWithHoverflyExtension(IInvokedMethod iInvokedMethod) throws IllegalAccessException {
-        HoverflyExtension hoverflyExtension = null;
+    public static HoverflyTestNG isAnnotatedWithHoverflyExtension(IInvokedMethod iInvokedMethod) throws IllegalAccessException {
+        HoverflyTestNG hoverflyTestNG = null;
         if(iInvokedMethod.isTestMethod()){
             Class testClass = iInvokedMethod.getTestMethod().getRealClass();
             Object object = iInvokedMethod.getTestMethod().getInstance();
             Field[] fields = testClass.getDeclaredFields();
             for (Field field : fields) {
-                if (field.getType().equals(HoverflyExtension.class)
-                        && field.getAnnotation(TestNgRule.class) != null) {
+                if (field.getType().equals(HoverflyTestNG.class)
+                        && field.getAnnotation(TestNGRule.class) != null) {
                     field.setAccessible(true);
-                    hoverflyExtension = (HoverflyExtension) field.get(object);
+                    hoverflyTestNG = (HoverflyTestNG) field.get(object);
                 }
             }
         }
-        return hoverflyExtension;
+        return hoverflyTestNG;
     }
 
     public static NoDiffAssertion isAnnotatedWithNoDiffAssertion(IInvokedMethod iInvokedMethod) throws IllegalAccessException {
@@ -110,7 +110,7 @@ class HoverflyExtensionUtils {
             Object object = iInvokedMethod.getTestMethod().getInstance();
             Field[] fields = testClass.getDeclaredFields();
             for (Field field : fields) {
-                if (field.getType().equals(NoDiffAssertion.class) && field.getAnnotation(TestNgRule.class) != null) {
+                if (field.getType().equals(NoDiffAssertion.class) && field.getAnnotation(TestNGRule.class) != null) {
                     field.setAccessible(true);
                     noDiffAssertion = (NoDiffAssertion) field.get(object);
                 }

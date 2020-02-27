@@ -3,7 +3,7 @@ package io.specto.hoverfly.testng;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.specto.hoverfly.junit.core.model.RequestResponsePair;
 import io.specto.hoverfly.junit.core.model.Simulation;
-import io.specto.hoverfly.testng.api.TestNgRule;
+import io.specto.hoverfly.testng.api.TestNGRule;
 import io.specto.hoverfly.testng.webserver.CaptureModeTestWebServer;
 import org.springframework.web.client.RestTemplate;
 import org.testng.annotations.AfterClass;
@@ -22,7 +22,7 @@ import static io.specto.hoverfly.junit.core.HoverflyConfig.localConfigs;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Listeners(HoverflyListener.class)
+@Listeners(HoverflyExecutor.class)
 public class IncrementalCaptureTest {
 
 
@@ -37,8 +37,8 @@ public class IncrementalCaptureTest {
         webServerBaseUrl = CaptureModeTestWebServer.run();
     }
 
-    @TestNgRule
-    public HoverflyExtension hoverflyExtension = HoverflyExtension.inCaptureMode(SIMULATION_FILE_NAME,
+    @TestNGRule
+    public HoverflyTestNG hoverflyTestNG = HoverflyTestNG.inCaptureMode(SIMULATION_FILE_NAME,
             localConfigs()
                     .captureAllHeaders()
                     .proxyLocalHost()

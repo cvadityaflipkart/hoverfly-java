@@ -1,6 +1,6 @@
 package io.specto.hoverfly.testng;
 
-import io.specto.hoverfly.testng.api.TestNgClassRule;
+import io.specto.hoverfly.testng.api.TestNGClassRule;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +18,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-@Listeners(HoverflyListener.class)
+@Listeners(HoverflyExecutor.class)
 public class SpyModeTest {
 
-    @TestNgClassRule
-    public static HoverflyExtension hoverflyExtension = HoverflyExtension.inSpyMode(classpath("test-service.json"));
+    @TestNGClassRule
+    public static HoverflyTestNG hoverflyTestNG = HoverflyTestNG.inSpyMode(classpath("test-service.json"));
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -34,7 +34,7 @@ public class SpyModeTest {
         assertThat(getBookingResponse.getStatusCode()).isEqualTo(OK);
 
         // From DSL
-        hoverflyExtension.simulate(dsl(service("www.other-anotherservice.com")
+        hoverflyTestNG.simulate(dsl(service("www.other-anotherservice.com")
                 .put("/api/bookings/1").body("{\"flightId\": \"1\", \"class\": \"PREMIUM\"}")
                 .willReturn(success())));
 

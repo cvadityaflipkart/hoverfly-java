@@ -5,17 +5,17 @@ import org.testng.IInvokedMethodListener2;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 
-import static io.specto.hoverfly.testng.HoverflyExtensionUtils.isAnnotatedWithHoverflyExtension;
-import static io.specto.hoverfly.testng.HoverflyExtensionUtils.isAnnotatedWithNoDiffAssertion;
+import static io.specto.hoverfly.testng.HoverflyTestNGUtils.isAnnotatedWithHoverflyExtension;
+import static io.specto.hoverfly.testng.HoverflyTestNGUtils.isAnnotatedWithNoDiffAssertion;
 
 public interface IHoverflyMethodListener extends IInvokedMethodListener2 {
 
     @Override
     default void beforeInvocation(IInvokedMethod method, ITestResult testResult, ITestContext context) {
         try {
-            HoverflyExtension hoverflyExtension;
-            if ((hoverflyExtension = isAnnotatedWithHoverflyExtension(method)) != null) {
-                hoverflyExtension.before();
+            HoverflyTestNG hoverflyTestNG;
+            if ((hoverflyTestNG = isAnnotatedWithHoverflyExtension(method)) != null) {
+                hoverflyTestNG.before();
             }
             NoDiffAssertion noDiffAssertion;
             if ((noDiffAssertion = isAnnotatedWithNoDiffAssertion(method)) != null) {
@@ -33,9 +33,9 @@ public interface IHoverflyMethodListener extends IInvokedMethodListener2 {
             if ((noDiffAssertion = isAnnotatedWithNoDiffAssertion(method)) != null) {
                 noDiffAssertion.performAssertion();
             }
-            HoverflyExtension hoverflyExtension;
-            if ((hoverflyExtension = isAnnotatedWithHoverflyExtension(method)) != null) {
-                hoverflyExtension.after();
+            HoverflyTestNG hoverflyTestNG;
+            if ((hoverflyTestNG = isAnnotatedWithHoverflyExtension(method)) != null) {
+                hoverflyTestNG.after();
             }
         } catch (IllegalAccessException e) {
             throw new IllegalStateException("IHoverflyMethodListener: afterInvocation, ", e);

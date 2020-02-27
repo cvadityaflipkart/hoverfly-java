@@ -3,7 +3,7 @@ package io.specto.hoverfly.testng;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.specto.hoverfly.junit.dsl.HttpBodyConverter;
 import io.specto.hoverfly.junit.verification.HoverflyVerificationError;
-import io.specto.hoverfly.testng.api.TestNgClassRule;
+import io.specto.hoverfly.testng.api.TestNGClassRule;
 import io.specto.hoverfly.testng.models.SimpleBooking;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-@Listeners(HoverflyListener.class)
+@Listeners(HoverflyExecutor.class)
 public class HoverflyRuleVerificationTest {
 
     private static final String NL = System.lineSeparator();
@@ -36,8 +36,8 @@ public class HoverflyRuleVerificationTest {
 
     private static SimpleBooking booking = new SimpleBooking(1, "London", "Hong Kong", LocalDate.of(2017, 6, 29));
 
-    @TestNgClassRule
-    public static HoverflyExtension hoverflyRule = HoverflyExtension.inSimulationMode(dsl(
+    @TestNGClassRule
+    public static HoverflyTestNG hoverflyRule = HoverflyTestNG.inSimulationMode(dsl(
 
             service(matches("api*.flight.com"))
                     .get("/api/bookings")

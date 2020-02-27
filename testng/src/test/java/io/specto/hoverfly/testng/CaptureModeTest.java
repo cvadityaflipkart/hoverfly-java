@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import io.specto.hoverfly.junit.core.model.RequestResponsePair;
 import io.specto.hoverfly.junit.core.model.Simulation;
-import io.specto.hoverfly.testng.api.TestNgClassRule;
+import io.specto.hoverfly.testng.api.TestNGClassRule;
 import io.specto.hoverfly.testng.webserver.CaptureModeTestWebServer;
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -26,7 +26,7 @@ import static io.specto.hoverfly.junit.core.HoverflyConfig.localConfigs;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Listeners(HoverflyListener.class)
+@Listeners(HoverflyExecutor.class)
 public class CaptureModeTest {
 
 
@@ -34,8 +34,8 @@ public class CaptureModeTest {
     private static final String RECORDED_SIMULATION_JSON = "recorded-simulation.json";
     private static final String EXPECTED_SIMULATION_JSON = "expected-simulation.json";
 
-    @TestNgClassRule
-    private static HoverflyExtension hoverflyExtension = HoverflyExtension.inCaptureMode(RECORDED_SIMULATION_JSON,
+    @TestNGClassRule
+    private static HoverflyTestNG hoverflyTestNG = HoverflyTestNG.inCaptureMode(RECORDED_SIMULATION_JSON,
             localConfigs().captureAllHeaders().proxyLocalHost());
 
     private URI webServerBaseUrl;
